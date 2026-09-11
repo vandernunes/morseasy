@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morse Easy</title>
+<meta name="description" content="Learn Morse code by ear, free. Every lesson meets the new sound first, then tells the characters apart, then copies groups of five - plus ham shorthand, callsign copy, full practice QSOs and a sending trainer.">
+<meta name="author" content="Vander Nunes, N5EDB">
+<meta name="theme-color" content="#0A0D0F">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://morseasy.com/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0D0F'/%3E%3Ccircle cx='17' cy='32' r='7.5' fill='%23F5A623'/%3E%3Crect x='30' y='24.5' width='25' height='15' rx='7.5' fill='%23F5A623'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0D0F'/%3E%3Ccircle cx='17' cy='32' r='7.5' fill='%23F5A623'/%3E%3Crect x='30' y='24.5' width='25' height='15' rx='7.5' fill='%23F5A623'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Morse Easy">
+<meta property="og:title" content="Morse Easy - learn CW by ear">
+<meta property="og:description" content="Learn Morse code by ear, free. Every lesson meets the new sound first, then tells the characters apart, then copies groups of five - plus ham shorthand, callsign copy, full practice QSOs and a sending trainer.">
+<meta property="og:url" content="https://morseasy.com/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Morse Easy - learn CW by ear">
+<meta name="twitter:description" content="Learn Morse code by ear, free. Every lesson meets the new sound first, then tells the characters apart, then copies groups of five - plus ham shorthand, callsign copy, full practice QSOs and a sending trainer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="rig-top" id="rigtop">
+  <div class="wrap">
+    <div class="toprow">
+      <button class="brand" id="brandbtn" title="Your station details">
+        <span class="call" id="mycall">N5EDB</span>
+        <span class="sub" id="mysub">easy</span>
+      </button>
+      <span class="sp"></span>
+      <span class="lamp" id="lamp" aria-hidden="true" title="Keying indicator"></span>
+      <button class="icobtn" id="helpbtn" title="How this works" aria-label="How this works">?</button>
+      <button class="icobtn" id="gearbtn" title="Settings" aria-label="Settings">&#9881;</button>
+    </div>
+    <div class="speeds" id="speedbar" role="group" aria-label="Speed"></div>
+  </div>
+</header>
+
+<nav class="modes" role="tablist" aria-label="Practice modes">
+  <div class="wrap">
+    <button class="mbtn" role="tab" data-mode="learn" aria-selected="true">Learn</button>
+    <button class="mbtn" role="tab" data-mode="alphabet" aria-selected="false">Letters</button>
+    <button class="mbtn" role="tab" data-mode="words" aria-selected="false">Words</button>
+    <button class="mbtn" role="tab" data-mode="calls" aria-selected="false">Callsigns</button>
+    <button class="mbtn" role="tab" data-mode="qso" aria-selected="false">QSO</button>
+    <button class="mbtn" role="tab" data-mode="send" aria-selected="false">Sending</button>
+    <button class="mbtn" role="tab" data-mode="sheet" aria-selected="false">Reference</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= LEARN ================= -->
+<section class="pane" id="pane-learn">
+  <div class="startcard" id="k-card">
+    <div class="sc-txt">
+      <span class="sc-k" id="k-kicker">Lesson 1 &middot; Step 1 of 3</span>
+      <span class="sc-h" id="k-title">Meet K and M</span>
+      <span class="sc-chars" id="k-chars">K M</span>
+      <span class="sc-p" id="k-sub">Nothing to answer yet. You just listen until the sound sticks.</span>
+    </div>
+    <button class="btn primary big" id="k-start">Start</button>
+  </div>
+
+  <ol class="stepper" id="k-stepper"></ol>
+
+  <div class="scope">
+
+    <!-- STEP 1: MEET -->
+    <div id="st-meet" class="stack" style="gap:12px">
+      <div class="scope-label"><span id="meet-lab">Listen</span><span class="rt" id="meet-rt"></span></div>
+      <div class="meetbox">
+        <div class="meet-ch" id="meet-ch">&mdash;</div>
+        <div class="meet-pat" id="meet-pat"></div>
+        <div class="meet-say" id="meet-say"></div>
+        <div class="meet-mn" id="meet-mn"></div>
+      </div>
+      <div class="verdict neutral" id="meet-v">Press Start and listen. No answering, no guessing.</div>
+      <div class="row">
+        <button class="btn" id="meet-again" disabled>Hear it again</button>
+        <button class="btn primary" id="meet-next" disabled>Next</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: TELL APART -->
+    <div id="st-pick" class="stack" style="gap:12px" hidden>
+      <div class="scope-label"><span>Which one was that?</span><span class="rt" id="pick-rt"></span></div>
+      <div class="readout" id="pick-readout"><span class="pend">press start</span></div>
+      <div class="verdict neutral" id="pick-v">One character at a time. Tap the one you heard &mdash; you are told straight away.</div>
+      <div class="keypad" id="pick-keypad"></div>
+      <div class="row">
+        <button class="btn" id="pick-replay" disabled>Hear again <kbd>Space</kbd></button>
+        <button class="btn ghost" id="pick-stop" disabled>Stop <kbd>Esc</kbd></button>
+      </div>
+    </div>
+
+    <!-- STEP 3: GROUPS -->
+    <div id="st-group" class="stack" style="gap:12px" hidden>
+      <div class="scope-label"><span id="k-scopelab">Listen</span><span class="rt" id="k-rt"></span></div>
+      <div class="readout" id="k-readout"><span class="pend">press start</span></div>
+      <div class="entry" id="k-entry"><span class="ph">your copy appears here</span></div>
+      <div class="verdict neutral" id="k-verdict">Five characters in a row. Type or tap them.</div>
+      <div class="keypad" id="k-keypad"></div>
+      <div class="row">
+        <button class="btn" id="k-replay" disabled>Replay <kbd>Space</kbd></button>
+        <button class="btn ghost" id="k-slower" disabled>Slower once</button>
+        <button class="btn ghost" id="k-stop" disabled>Stop <kbd>Esc</kbd></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stack">
+    <h3 class="sec">Hear any character, any time</h3>
+    <div class="hearstrip" id="k-hear"></div>
+    <span class="hint">Tap one to play it. Use this whenever a sound will not come back to you &mdash; looking it up beats guessing.</span>
+  </div>
+
+  <div class="meters">
+    <div class="meter"><span class="m-k">Lesson</span><span class="m-v amber" id="m-lesson">1</span></div>
+    <div class="meter"><span class="m-k">Characters</span><span class="m-v" id="m-count">2</span></div>
+    <div class="meter"><span class="m-k">Best here</span><span class="m-v good" id="m-best">&mdash;</span></div>
+    <div class="meter"><span class="m-k">This run</span><span class="m-v" id="m-now">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Day streak</span><span class="m-v amber" id="m-streak">0</span></div>
+  </div>
+
+  <details class="more" id="k-more">
+    <summary>Your characters, weak spots, and lesson controls</summary>
+    <div class="body">
+      <div class="stack">
+        <h3 class="sec">Characters in this lesson</h3>
+        <div class="chips" id="k-chips"></div>
+        <div class="row">
+          <button class="btn sm ghost" id="k-back">&minus; Lesson</button>
+          <button class="btn sm ghost" id="k-fwd">+ Lesson</button>
+          <span class="hint">Newest is highlighted. Going forward before 90&nbsp;% usually backfires.</span>
+        </div>
+      </div>
+      <div class="stack">
+        <h3 class="sec">Weak characters</h3>
+        <div class="chips" id="k-weak"><span class="hint">Nothing logged yet.</span></div>
+      </div>
+      <div class="stack">
+        <h3 class="sec">How to run this</h3>
+        <ul class="tight">
+          <li>Two sessions of 10&nbsp;minutes beats one of 30. Every day matters more than how long.</li>
+          <li>Never write down dots and dashes. Write the letter or nothing.</li>
+          <li>Miss one? Let it go and stay with the next character. Chasing a miss costs you the next three.</li>
+          <li>Leave character speed at <strong>18&nbsp;wpm or higher</strong>. Speed up the <em>gaps</em>, never the characters.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= LETTERS ================= -->
+<section class="pane" id="pane-alphabet" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">Tap any cell to hear it</span>
+    <h2>The whole character set</h2>
+    <p>Read the sound column out loud &mdash; <em>di-dah</em>, not &ldquo;dot dash.&rdquo; The rhythm is what you are memorising. The mnemonics are a crutch for the first week; drop them as soon as you can.</p>
+  </div>
+  <div class="stack"><h3 class="sec">Letters</h3><div class="alpha" id="a-letters"></div></div>
+  <div class="stack"><h3 class="sec">Numbers</h3><div class="alpha" id="a-numbers"></div></div>
+  <div class="stack"><h3 class="sec">Punctuation you will actually hear</h3><div class="alpha" id="a-punct"></div></div>
+  <div class="note"><strong>Cut numbers.</strong> In contests and reports operators shorten 0 to <code>T</code> and 9 to <code>N</code>. <em>5NN</em> is 599. Learn to hear both.</div>
+</section>
+
+<!-- ================= WORDS ================= -->
+<section class="pane" id="pane-words" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">Whole-word sound</span>
+    <h2>Ham words on the air</h2>
+    <p>Experienced operators do not hear these letter by letter &mdash; they hear one shape, the way you hear your own callsign. Drill until the meaning arrives before the last character does.</p>
+  </div>
+  <div class="row" id="w-sets"></div>
+  <div class="scope">
+    <div class="scope-label"><span>Listen</span><span class="rt" id="w-rt"></span></div>
+    <div class="readout" id="w-readout"><span class="pend">press start</span></div>
+    <div class="entry" id="w-entry"><span class="ph">your copy appears here</span></div>
+    <div class="verdict neutral" id="w-verdict">Pick a set, then press Start.</div>
+    <div class="keypad wide" id="w-keypad"></div>
+    <div class="row">
+      <button class="btn primary" id="w-start">Start</button>
+      <button class="btn" id="w-replay" disabled>Replay <kbd>Space</kbd></button>
+      <button class="btn ghost" id="w-reveal" disabled>Show it</button>
+      <button class="btn ghost" id="w-stop" disabled>Stop</button>
+    </div>
+  </div>
+  <div class="meters">
+    <div class="meter"><span class="m-k">Correct</span><span class="m-v good" id="w-ok">0</span></div>
+    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="w-no">0</span></div>
+    <div class="meter"><span class="m-k">Accuracy</span><span class="m-v" id="w-acc">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="w-streak">0</span></div>
+  </div>
+  <details class="more"><summary>Everything in this set</summary><div class="body">
+    <div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="w-table"></tbody></table></div>
+  </div></details>
+</section>
+
+<!-- ================= CALLSIGNS ================= -->
+<section class="pane" id="pane-calls" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">The hardest thing to copy</span>
+    <h2>Callsign copy</h2>
+    <p>Callsigns break every shortcut your brain wants to use &mdash; no word shape, no context, no guessing from the first two characters. This drill decides whether you can work a pileup. Your own call is salted in so it comes back instantly.</p>
+  </div>
+  <div class="row" id="c-sets"></div>
+  <div class="scope">
+    <div class="scope-label"><span>Listen &mdash; sent twice</span><span class="rt" id="c-rt"></span></div>
+    <div class="readout" id="c-readout"><span class="pend">press start</span></div>
+    <div class="entry" id="c-entry"><span class="ph">your copy appears here</span></div>
+    <div class="verdict neutral" id="c-verdict">Sent twice, the way a real station calls.</div>
+    <div class="keypad wide" id="c-keypad"></div>
+    <div class="row">
+      <button class="btn primary" id="c-start">Start</button>
+      <button class="btn" id="c-replay" disabled>Replay <kbd>Space</kbd></button>
+      <button class="btn ghost" id="c-reveal" disabled>Show it</button>
+      <button class="btn ghost" id="c-stop" disabled>Stop</button>
+    </div>
+  </div>
+  <div class="meters">
+    <div class="meter"><span class="m-k">Correct</span><span class="m-v good" id="c-ok">0</span></div>
+    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="c-no">0</span></div>
+    <div class="meter"><span class="m-k">Accuracy</span><span class="m-v" id="c-acc">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="c-streak">0</span></div>
+  </div>
+  <div class="note"><strong>Partial copy is normal.</strong> If you get <em>?5EDB</em>, send <code>?5EDB DE &lt;your call&gt; K</code> or just <code>AGN?</code>. Nobody expects a perfect first copy &mdash; asking for a repeat is what the whole shorthand exists for.</div>
+</section>
+
+<!-- ================= QSO ================= -->
+<section class="pane" id="pane-qso" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">A real contact, end to end</span>
+    <h2>Work a station</h2>
+    <p>Each line is sent with the text hidden. Copy it in your head, then <strong>tap the line to reveal it</strong> and check. Your side is written the way you would actually send it &mdash; read along and you will have the script memorised before your first real call.</p>
+  </div>
+  <div class="row" id="q-picker"></div>
+  <div class="scope">
+    <div class="scope-label"><span>On frequency</span><span class="rt" id="q-rt"></span></div>
+    <div class="readout" id="q-readout"><span class="pend">standing by</span></div>
+    <div class="verdict neutral" id="q-verdict"></div>
+    <div class="row">
+      <button class="btn primary" id="q-play">Play first line</button>
+      <button class="btn" id="q-replay" disabled>Replay line</button>
+      <button class="btn ghost" id="q-revealall">Reveal all</button>
+      <button class="btn ghost" id="q-reset">Start over</button>
+    </div>
+  </div>
+  <div class="qso" id="q-lines"></div>
+  <div class="cols">
+    <div class="stack">
+      <h3 class="sec">Your side, ready to send</h3>
+      <div class="script" id="q-mine"></div>
+    </div>
+    <div class="stack">
+      <h3 class="sec">What the separators mean</h3>
+      <ul class="tight">
+        <li><code>BT</code> (<code>=</code>) &mdash; a pause, like a comma or a new paragraph.</li>
+        <li><code>KN</code> &mdash; over, <em>to you only</em>. Others should not break in.</li>
+        <li><code>K</code> &mdash; over, anyone may answer.</li>
+        <li><code>AR</code> &mdash; end of this transmission, no reply expected yet.</li>
+        <li><code>SK</code> &mdash; end of contact. The last thing you send.</li>
+        <li><code>8 dits</code> &mdash; I made an error, here comes that word again.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SENDING ================= -->
+<section class="pane" id="pane-send" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">Keyboard, touchscreen, or your paddle</span>
+    <h2>Sending practice</h2>
+    <p>Sending is easier than copying, and sending badly is the fastest way to be asked for repeats. Watch the decoded line: if this cannot read you, neither can the operator on the other end.</p>
+  </div>
+  <div class="row" id="s-keymode"></div>
+  <div class="scope">
+    <div class="scope-label"><span>Send this</span><span class="rt">Timing follows character speed</span></div>
+    <div class="readout" id="s-target">CQ CQ DE N5EDB</div>
+    <div class="scope-label"><span>Decoded from your fist</span></div>
+    <div class="readout" id="s-decoded"><span class="pend">nothing yet</span></div>
+    <div class="stream" id="s-stream"></div>
+    <div class="verdict neutral" id="s-verdict">Hold a pad below, or hold the keyboard key.</div>
+    <div class="row">
+      <button class="btn primary" id="s-next">New target</button>
+      <button class="btn" id="s-hear">Hear it correct</button>
+      <button class="btn ghost" id="s-clear">Clear</button>
+    </div>
+  </div>
+  <div class="pads" id="s-pads"></div>
+  <div class="hint" id="s-keys"></div>
+  <div class="meters">
+    <div class="meter"><span class="m-k">Your speed</span><span class="m-v amber" id="s-wpm">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Dit avg</span><span class="m-v" id="s-dit">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Dah ratio</span><span class="m-v" id="s-ratio">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Sent clean</span><span class="m-v good" id="s-ok">0</span></div>
+  </div>
+  <details class="more"><summary>Using a real key or paddle instead</summary><div class="body">
+    <div class="cols">
+      <div class="stack">
+        <h3 class="sec">Your rig is a better trainer than this page</h3>
+        <ul class="tight">
+          <li>Plug the paddle into <code>KEY</code> on the back of the radio.</li>
+          <li>On an IC-7300: <code>SET</code> &rarr; <code>Function</code> &rarr; set <strong>Break-In to OFF</strong>.</li>
+          <li>Set <code>Side Tone Level</code> to taste and the pitch to match this page.</li>
+          <li>The paddle now drives the internal keyer and sidetone with <strong>no RF out</strong> until you press TRANSMIT. Real feel, zero chance of keying up the band.</li>
+          <li>Set the internal keyer speed to match what you are copying. Never send faster than you can receive.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3 class="sec">A paddle plugged straight into a computer</h3>
+        <ul class="tight">
+          <li>A key or paddle is a passive switch. A computer headset jack expects a microphone signal, not a contact closure, so a plain 3.5&nbsp;mm cable produces nothing usable.</li>
+          <li>What does work: a USB keyer interface that presents the paddle as a keyboard or serial device, or the rig method above.</li>
+          <li>Until then the pads and keyboard here give correct timing and correct decoding. What they cannot teach is muscle memory in your hand.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note"><strong>About hardware CW decoders.</strong> Keep one for curiosity, not for learning. They fall apart on hand-sent CW, fading and interference &mdash; exactly the signals you need to copy &mdash; and reading a screen trains your eyes while your ears stay untrained. Use one to check your <em>own</em> sending, never to copy someone else.</div>
+  </div></details>
+</section>
+
+<!-- ================= REFERENCE ================= -->
+<section class="pane" id="pane-sheet" hidden>
+  <div class="pane-head">
+    <span class="eyebrow">Print it, tape it above the rig</span>
+    <h2>Everything you need on frequency</h2>
+    <p>Once the lessons have the characters in your ear, this is the whole language. Roughly forty of these carry ninety percent of a normal contact.</p>
+  </div>
+  <div class="stack">
+    <h3 class="sec">Your first contact, word for word</h3>
+    <div class="script" id="sh-script"></div>
+    <div class="hint">Answering a CQ is easier than calling one. Do that ten times before you ever call CQ yourself.</div>
+  </div>
+  <div class="stack">
+    <h3 class="sec">Prosigns &mdash; sent as one run-together character</h3>
+    <div class="tbl-scroll"><table><thead><tr><th>Prosign</th><th>Sound</th><th>Means</th></tr></thead><tbody id="sh-pro"></tbody></table></div>
+  </div>
+  <div class="stack">
+    <h3 class="sec">Q-codes</h3>
+    <div class="tbl-scroll"><table><thead><tr><th>Code</th><th>Statement</th><th>As a question</th></tr></thead><tbody id="sh-q"></tbody></table></div>
+  </div>
+  <div class="stack">
+    <h3 class="sec">Abbreviations</h3>
+    <div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="sh-ab"></tbody></table></div>
+  </div>
+  <details class="more"><summary>RST &mdash; the report you give and get</summary><div class="body">
+    <div class="cols">
+      <div class="tbl-scroll"><table><thead><tr><th>R</th><th>Readability</th></tr></thead><tbody id="sh-r"></tbody></table></div>
+      <div class="tbl-scroll"><table><thead><tr><th>S</th><th>Strength</th></tr></thead><tbody id="sh-s"></tbody></table></div>
+      <div class="tbl-scroll"><table><thead><tr><th>T</th><th>Tone</th></tr></thead><tbody id="sh-t"></tbody></table></div>
+    </div>
+    <div class="hint">In practice almost everyone sends 599 (&ldquo;5NN&rdquo;) in contests and something honest like 579 in a ragchew. Modern rigs are all T=9, so the third digit is basically always 9.</div>
+  </div></details>
+  <div class="cols">
+    <div class="stack">
+      <h3 class="sec">Where to find slow CW on the air</h3>
+      <ul class="tight">
+        <li><strong>SKCC</strong> straight-key calling frequencies: 7.055, 14.050, 3.550. Patient operators, mechanical keys, happy to slow down.</li>
+        <li><strong>K1USN SST</strong> &mdash; a one-hour slow-speed sprint, 20&nbsp;wpm max, Fridays and Sundays. The friendliest first contest that exists.</li>
+        <li><strong>CWops CWT</strong> &mdash; Wednesdays, fast, but you can copy just the callsigns as practice without transmitting.</li>
+        <li><strong>W1AW code practice</strong> &mdash; scheduled slow-speed transmissions on several bands, sent by the ARRL.</li>
+        <li><strong>POTA</strong> CW activations sit just above the band edges, usually 13&ndash;18&nbsp;wpm with a short fixed exchange.</li>
+        <li>General class CW segments: 3.525&ndash;3.600, 7.025&ndash;7.125, 14.025&ndash;14.150, 21.025&ndash;21.200, 28.000&ndash;28.300.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3 class="sec">Structured help, mostly free</h3>
+      <ul class="tight">
+        <li><strong>CW Academy</strong> (CWops) &mdash; semester-based classes with a live advisor, beginner through advanced. The single most effective thing on this list.</li>
+        <li><strong>Long Island CW Club</strong> &mdash; daily Zoom classes, small annual fee, very beginner-friendly.</li>
+        <li><strong>SKCC</strong> and <strong>FISTS</strong> &mdash; membership clubs with sked pages where you can arrange a slow, forgiving first contact with someone who expects a beginner.</li>
+        <li><strong>lcwo.net</strong> and <strong>Morse Code Ninja</strong> &mdash; more drilling than any one person can finish.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span id="foot-id">Free. No account, no tracking, nothing to install.</span>
+    <span class="credit">Built by <a href="https://github.com/vandernunes">Vander Nunes &middot; N5EDB</a> &mdash; <a href="https://github.com/vandernunes/morseasy">source on GitHub</a></span>
+    <span class="sync" id="sync">Progress saved in this browser</span>
+  </div>
+</footer>
+
+<!-- ============ dialogs ============ -->
+<dialog id="dlg-help">
+  <div class="dlg-head"><h3>How this works</h3></div>
+  <div class="dlg-body">
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span class="tx"><b>Never count dots.</b> Characters are always sent fast so you learn each one as a single sound. The gaps between them are what make it slow enough to follow.</span></div>
+      <div class="step"><span class="n">2</span><span class="tx"><b>Every lesson runs in three steps.</b> First you just listen to the new sound. Then you name one character at a time and it tells you the answer every time. Only then do you copy groups of five.</span></div>
+      <div class="step"><span class="n">3</span><span class="tx"><b>Type or tap.</b> Use your keyboard, or the on-screen keys &mdash; whichever is in front of you. <kbd>Space</kbd> replays, <kbd>Esc</kbd> stops.</span></div>
+      <div class="step"><span class="n">4</span><span class="tx"><b>Never guess.</b> If a sound will not come back to you, tap it in <b>Hear any character</b> below the practice box. Looking it up teaches you something; guessing teaches you nothing.</span></div>
+      <div class="step"><span class="n">5</span><span class="tx"><b>Ten minutes, twice a day.</b> Beats one long session every time. Come back tomorrow and the day after.</span></div>
+    </div>
+    <div class="field">
+      <span class="k">Your callsign &mdash; optional</span>
+      <input type="text" id="f-call2" maxlength="12" placeholder="e.g. N5EDB" autocomplete="off" spellcheck="false">
+      <span class="note-sm">Drops your own call into the practice contacts and the callsign drill. You can add it any time under the gear &mdash; and you do not need a licence to learn the code.</span>
+    </div>
+    <div class="note">Too fast? Tap <strong>Crawl</strong> in the speed bar at the top. Too slow? Tap <strong>Steady</strong>. Everything else lives under the gear.</div>
+  </div>
+  <div class="dlg-foot"><button class="btn primary" id="help-close">Start lesson 1</button></div>
+</dialog>
+
+<dialog id="dlg-set">
+  <div class="dlg-head"><h3>Settings</h3></div>
+  <div class="dlg-body">
+    <div class="field">
+      <span class="k">Your callsign</span>
+      <input type="text" id="f-call" maxlength="12" placeholder="N5EDB" autocomplete="off" spellcheck="false">
+      <span class="note-sm">Used in the QSO scripts, the callsign drill and the reference sheet.</span>
+    </div>
+    <div class="cols" style="gap:12px">
+      <div class="field">
+        <span class="k">Name on the air</span>
+        <input type="text" id="f-name" maxlength="14" placeholder="ALEX" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <span class="k">Your QTH</span>
+        <input type="text" id="f-qth" maxlength="20" placeholder="DENVER CO" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="field">
+      <span class="k">Your rig</span>
+      <input type="text" id="f-rig" maxlength="20" placeholder="IC-7300" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="field">
+      <span class="k">Character speed <b id="v-cwpm">20 wpm</b></span>
+      <input type="range" id="cwpm" min="13" max="35" step="1" value="20">
+      <span class="note-sm">How fast each character itself is sent. Keep this at 18 or above &mdash; it is what stops you counting dots.</span>
+    </div>
+    <div class="field">
+      <span class="k">Overall speed <b id="v-ewpm">8 wpm</b></span>
+      <input type="range" id="ewpm" min="4" max="35" step="1" value="8">
+      <span class="note-sm">Extra silence between characters. This is the knob you raise as you improve.</span>
+    </div>
+    <div class="field">
+      <span class="k">Tone pitch <b id="v-tone">600 Hz</b></span>
+      <input type="range" id="tone" min="400" max="1000" step="10" value="600">
+    </div>
+    <div class="field">
+      <span class="k">Volume <b id="v-vol">30%</b></span>
+      <input type="range" id="vol" min="0" max="100" step="1" value="30">
+    </div>
+    <div class="field">
+      <span class="k">Groups per lesson</span>
+      <div class="seg" id="f-len"></div>
+    </div>
+    <div class="field">
+      <span class="k">On-screen keys</span>
+      <div class="seg" id="f-pad"></div>
+      <span class="note-sm">Turn off if you only ever type.</span>
+    </div>
+    <div class="field">
+      <span class="k">Repeat a group you missed</span>
+      <div class="seg" id="f-rep"></div>
+    </div>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn ghost" id="f-reset">Reset progress</button>
+    <button class="btn primary" id="set-close">Done</button>
+  </div>
+</dialog>
+
+<script src="js/morse.js"></script>
+<script src="js/content.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/learn.js"></script>
+<script src="js/letters.js"></script>
+<script src="js/drills.js"></script>
+<script src="js/qso.js"></script>
+<script src="js/send.js"></script>
+<script src="js/reference.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
