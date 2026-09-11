@@ -42,9 +42,27 @@ Then test it by hand in a browser, with the sound on. This is an audio app; a
 passing check script proves nothing about whether the code sounds right.
 At minimum walk one lesson through all three steps.
 
+## Who can change what
+
+Anyone can contribute. Nobody can merge but the maintainer.
+
+- **You do not need access to contribute.** Fork the repo, push to your fork,
+  open a pull request. That is the normal path and it is open to everyone.
+- **`main` is protected.** Nobody pushes to it directly — not contributors, not
+  collaborators, not the maintainer. Every change arrives as a pull request.
+- **Every pull request needs maintainer review and approval before it can be
+  merged.** Checks passing is necessary, not sufficient. Someone reads it.
+- **Workflows on a first-time contributor's pull request need manual approval**
+  before they run.
+- **Fork pull requests never receive repository secrets.** The deploy workflow
+  only runs on a push to `main`, which only happens after a merge.
+
+That is the whole point: things ship to morseasy.com automatically, so what
+gets merged is the gate, and a person controls it.
+
 ## Branches
 
-Trunk-based. `main` is always deployable — every push to it ships to
+Trunk-based. `main` is always deployable — every merge to it ships to
 morseasy.com within about a minute.
 
 Branch off `main`, keep it short-lived, open a PR, squash merge.
