@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import json
 import pathlib
 import re
 import shutil
@@ -151,6 +152,55 @@ def main() -> int:
     ok("CSP has no 'unsafe-eval'", "unsafe-eval" not in csp)
     ok("CSP default-src is 'none'", "default-src 'none'" in csp)
     ok("CSP forbids framing", "frame-ancestors 'none'" in csp)
+
+    print("\noffline / installable")
+    man = DIST / "manifest.webmanifest"
+    ok("a web manifest ships", man.is_file())
+    if man.is_file():
+        try:
+            mf = json.loads(man.read_text(encoding="utf-8"))
+        except Exception as exc:
+            mf = {}
+            ok("manifest is valid JSON", False, str(exc))
+        for key in ("name", "start_url", "display", "icons", "theme_color",
+                    "background_color"):
+            ok(f"manifest declares {key}", key in mf)
+        sizes = {i.get("sizes") for i in mf.get("icons", [])}
+        ok("manifest has 192 and 512 icons", {"192x192", "512x512"} <= sizes,
+           f"has {sorted(sizes)} - installability needs both")
+        ok("manifest has a maskable icon",
+           any(i.get("purpose") == "maskable" for i in mf.get("icons", [])),
+           "without one, Android crops the icon into a circle badly")
+
+    swf = DIST / "sw.js"
+    ok("a service worker ships", swf.is_file())
+    if swf.is_file():
+        sw = swf.read_text(encoding="utf-8")
+        ok("the build id was substituted", "#BUILD_ID" not in sw,
+           "an unsubstituted id means every build shares a cache name and "
+           "returning visitors keep the old app forever")
+        shell = re.findall(r'"(/[^"]*)"', sw.split("const SHELL")[1].split("]")[0])
+        missing = [
+            r for r in shell
+            if r != "/" and not (DIST / r.lstrip("/")).is_file()
+        ]
+        ok("every precached path exists", not missing,
+           f"missing from dist: {missing} - addAll() rejects and the whole "
+           "install fails, leaving visitors on the old worker")
+
+    for icon in ("icons/icon-192.png", "icons/icon-512.png",
+                 "icons/icon-maskable-512.png", "icons/apple-touch-icon.png"):
+        ok(f"{icon} ships", (DIST / icon).is_file())
+
+    ok("the manifest is linked from the page",
+       'rel="manifest"' in built)
+    ok("fonts are self-hosted",
+       "fonts.googleapis.com" not in built and "fonts.gstatic.com" not in built,
+       "a third-party font request leaks the visitor's IP and breaks the "
+       "offline-first promise")
+    ok("no external origin appears in the CSP",
+       not re.search(r"https?://", csp),
+       f"CSP still names an outside host: {csp[:160]}")
 
     print("\ntheme")
 

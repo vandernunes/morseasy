@@ -7,6 +7,32 @@ This project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Installable, and works fully offline.** Service worker plus web manifest.
+  Install from Settings, or Share → Add to Home Screen on iOS. Also exempts the
+  app from Safari's seven-day storage eviction, which was silently costing
+  people their streaks.
+- **Light theme** with a three-state switch: follow the device, light, or dark.
+- Mobile layout rebuilt: tabs moved to a fixed bottom bar, tap targets raised to
+  44px, safe-area insets, dialogs as bottom sheets.
+
+### Changed
+
+- **Fonts are self-hosted.** The page now makes zero third-party requests and
+  the Content-Security-Policy names no external host.
+- Content-Security-Policy with a sha256 hash per inlined block — no
+  `unsafe-inline`, no `unsafe-eval`.
+
+### Fixed
+
+- The footer slid under the fixed tab bar on phones.
+- Settings dialog buttons were pushed off screen on iOS — `vh` ignores Safari's
+  toolbars, so the dialog is capped with `dvh` and only its body scrolls.
+- On Words and Callsigns the Start button sat below a 36-key pad, off screen.
+- `--top-h` was written by JavaScript but never declared in CSS, so the sticky
+  offset was invalid on first paint.
+
 ## [1.0.0] - 2026-09-11
 
 First public release, live at [morseasy.com](https://morseasy.com).

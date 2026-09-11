@@ -1,6 +1,6 @@
 # Morse Easy
 
-**Learn CW by ear, free, in your browser.** No account, no install, no tracking.
+**Learn CW by ear, free, in your browser.** No account, no tracking, works offline.
 
 **[morseasy.com](https://morseasy.com)**
 
@@ -90,11 +90,27 @@ the callsign drill and the reference sheet.
 
 ## Use it
 
-Just open **[morseasy.com](https://morseasy.com)**. It works on a phone, a
-tablet, or a desktop, and once loaded it works with no connection at all.
+Just open **[morseasy.com](https://morseasy.com)**.
 
-Your progress is saved in your browser. Nothing is sent anywhere — there is no
-server to send it to.
+### Install it, and it works with no signal
+
+Open **Settings (the gear) → Use it offline**, or use your browser's install
+button. On an iPhone: **Share → Add to Home Screen**.
+
+Once installed there is nothing left to fetch. The page, the fonts and the
+icons are the whole app, and there is no API, no analytics and no backend —
+so it runs identically on a plane, in a basement, or in a field with no bars.
+
+**Installing also stops iOS deleting your progress.** Safari clears
+script-writable storage after seven days without a visit, so a fortnight away
+costs you every lesson and your streak. Installed apps are exempt.
+
+### Your data
+
+Progress is saved in your browser and never leaves the device. There is no
+server to send it to, no account, and no tracking. The page makes **zero**
+third-party requests — the fonts are served from this origin, which is why the
+Content-Security-Policy names no external host at all.
 
 ### Run it locally
 
@@ -116,12 +132,12 @@ flowchart LR
         direction TB
         H["index.html<br/><i>markup + head</i>"]
         CSS["css/styles.css"]
-        JS["js/ · 13 modules"]
+        JS["js/ · 14 modules"]
     end
 
     SRC --> B["scripts/build.py<br/><i>inlines everything</i>"]
-    P["public/<br/><i>_headers, robots, sitemap</i>"] --> B
-    B --> D["dist/index.html<br/><b>one self-contained file</b><br/>no requests, works offline"]
+    P["public/<br/><i>sw.js, manifest, fonts, icons</i>"] --> B
+    B --> D["dist/<br/><b>index.html — one self-contained page</b><br/>+ service worker, fonts, icons"]
     D --> CI["GitHub Actions<br/><i>on push to main</i>"]
     CI --> CF["Cloudflare Pages"]
     CF --> DOM(["morseasy.com"])
@@ -130,20 +146,25 @@ flowchart LR
     style DOM fill:#13181B,stroke:#54C98D,color:#54C98D
 ```
 
-**Why one file?** It has to work from a phone with no signal, from a USB stick
-at a club meeting, and from a `file://` URL. The source is split into readable
-modules; the build inlines them. You get both.
+**Why one file?** The page has to work from a phone with no signal, from a USB
+stick at a club meeting, and from a `file://` URL. The source is split into
+readable modules; the build inlines all of them into a single `index.html`. You
+get both. Fonts, icons and the service worker sit alongside it so the installed
+app is fully self-contained.
 
 ```
 morseasy/
 ├── src/
 │   ├── index.html          markup, head, script order
 │   ├── css/styles.css      the whole visual system
-│   └── js/                 13 modules, loaded in order (see docs/ARCHITECTURE.md)
+│   └── js/                 14 modules, loaded in order (see docs/ARCHITECTURE.md)
 ├── public/                 copied verbatim into dist/
+│   ├── sw.js               service worker — precache and offline
+│   ├── manifest.webmanifest
+│   └── fonts/ icons/       self-hosted, so there are no third-party requests
 ├── scripts/
 │   ├── build.py            src/ + public/ → dist/
-│   └── check.py            16 checks; run before every push
+│   └── check.py            63 checks; run before every push
 ├── docs/
 │   ├── ARCHITECTURE.md     module map, load order, the rules that bite
 │   └── LEARNING-PATH.md    the teaching method and why it is shaped this way

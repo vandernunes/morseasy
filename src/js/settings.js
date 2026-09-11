@@ -67,7 +67,7 @@ window.matchMedia("(prefers-color-scheme: dark)")
 
 const dlgSet = document.getElementById("dlg-set");
 const dlgHelp = document.getElementById("dlg-help");
-function openSettings(){ syncSettingInputs(); dlgSet.showModal(); }
+function openSettings(){ syncSettingInputs(); renderOffline(); dlgSet.showModal(); }
 document.getElementById("gearbtn").addEventListener("click", openSettings);
 document.getElementById("brandbtn").addEventListener("click", openSettings);
 document.getElementById("helpbtn").addEventListener("click", () => dlgHelp.showModal());

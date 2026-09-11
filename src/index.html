@@ -10,8 +10,12 @@
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://morseasy.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0D0F'/%3E%3Ccircle cx='17' cy='32' r='7.5' fill='%23F5A623'/%3E%3Crect x='30' y='24.5' width='25' height='15' rx='7.5' fill='%23F5A623'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0D0F'/%3E%3Ccircle cx='17' cy='32' r='7.5' fill='%23F5A623'/%3E%3Crect x='30' y='24.5' width='25' height='15' rx='7.5' fill='%23F5A623'/%3E%3C/svg%3E">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0D0F'/%3E%3Ccircle cx='17' cy='32' r='7.5' fill='%23F5A623'/%3E%3Crect x='30' y='24.5' width='25' height='15' rx='7.5' fill='%23F5A623'/%3E%3C/svg%3E">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Morse Easy">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Morse Easy">
@@ -21,9 +25,6 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Morse Easy - learn CW by ear">
 <meta name="twitter:description" content="Learn Morse code by ear, free. Every lesson meets the new sound first, then tells the characters apart, then copies groups of five - plus ham shorthand, callsign copy, full practice QSOs and a sending trainer.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -420,6 +421,11 @@
 <dialog id="dlg-set">
   <div class="dlg-head"><h3>Settings</h3></div>
   <div class="dlg-body">
+    <div class="field" id="offlinebox">
+      <span class="k">Use it offline</span>
+      <div id="offline-state" class="note-sm">Checking&hellip;</div>
+    </div>
+
     <div class="field">
       <span class="k">Your callsign</span>
       <input type="text" id="f-call" maxlength="12" placeholder="N5EDB" autocomplete="off" spellcheck="false">
@@ -490,6 +496,7 @@
 <script src="js/qso.js"></script>
 <script src="js/send.js"></script>
 <script src="js/reference.js"></script>
+<script src="js/offline.js"></script>
 <script src="js/app.js"></script>
 
 </body>
