@@ -104,6 +104,21 @@
       </div>
     </div>
 
+    <!-- STEP 4: SEND IT BACK -->
+    <div id="st-echo" class="stack gap-12" hidden>
+      <div class="scope-label"><span>Send it back</span><span class="rt" id="echo-rt"></span></div>
+      <div class="readout" id="echo-readout"><span class="pend">press start</span></div>
+      <div class="stream" id="echo-stream"></div>
+      <div class="verdict neutral" id="echo-v">You hear a character, then key it back. Your ears and your hand on the same character.</div>
+      <div class="keywrap" id="echo-pads"></div>
+      <div class="hint" id="echo-keys"></div>
+      <div class="row">
+        <button class="btn" id="echo-hear" disabled>Hear it again <kbd>Space</kbd></button>
+        <button class="btn ghost" id="echo-skip" disabled>Skip this one</button>
+        <button class="btn ghost" id="echo-stop" disabled>Stop <kbd>Esc</kbd></button>
+      </div>
+    </div>
+
     <!-- STEP 3: GROUPS -->
     <div id="st-group" class="stack gap-12" hidden>
       <div class="scope-label"><span id="k-scopelab">Listen</span><span class="rt" id="k-rt"></span></div>
@@ -457,6 +472,11 @@
       <span class="note-sm">Extra silence between characters. This is the knob you raise as you improve.</span>
     </div>
     <div class="field">
+      <span class="k">Your keying speed <b id="v-keywpm">13 wpm</b></span>
+      <input type="range" id="keywpm" min="5" max="30" step="1" value="13">
+      <span class="note-sm">How fast <em>you</em> send. Separate from listening on purpose &mdash; everyone copies faster than they can key, and at 20&nbsp;wpm a dit has to be released inside 120&nbsp;ms.</span>
+    </div>
+    <div class="field">
       <span class="k">Tone pitch <b id="v-tone">600 Hz</b></span>
       <input type="range" id="tone" min="400" max="1000" step="10" value="600">
     </div>
@@ -494,6 +514,7 @@
 <script src="js/letters.js"></script>
 <script src="js/drills.js"></script>
 <script src="js/qso.js"></script>
+<script src="js/keyer.js"></script>
 <script src="js/send.js"></script>
 <script src="js/reference.js"></script>
 <script src="js/offline.js"></script>

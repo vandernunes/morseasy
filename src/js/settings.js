@@ -92,6 +92,9 @@ function syncSettingInputs(){
   set("ewpm", S.ewpm, v => v+" wpm");
   set("tone", S.tone, v => v+" Hz");
   set("vol", Math.round(S.vol*100), v => v+"%");
+  const kw = document.getElementById("keywpm");
+  kw.value = clamp(num(P.keyWpm, 13), 5, 30);
+  document.getElementById("v-keywpm").textContent = kw.value + " wpm";
   document.getElementById("f-len").innerHTML = [5,8,12,20]
     .map(n => '<button data-len="'+n+'" aria-pressed="'+(P.groupsPerLesson===n)+'">'+n+'</button>').join("");
   document.getElementById("f-pad").innerHTML = [["on","Show"],["off","Hide"]]
@@ -119,6 +122,11 @@ bindRange("cwpm","cwpm", v => v+" wpm");
 bindRange("ewpm","ewpm", v => v+" wpm");
 bindRange("tone","tone", v => v+" Hz");
 bindRange("vol","vol",  v => v+"%");
+document.getElementById("keywpm").addEventListener("input", e => {
+  P.keyWpm = clamp(num(e.target.value, 13), 5, 30);
+  document.getElementById("v-keywpm").textContent = P.keyWpm + " wpm";
+  save();
+});
 
 ["f-call","f-name","f-qth","f-rig"].forEach(id => {
   document.getElementById(id).addEventListener("input", e => {

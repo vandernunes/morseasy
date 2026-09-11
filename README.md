@@ -37,7 +37,8 @@ flowchart TD
         S1["<b>1 · Meet the sound</b><br/>The character, its rhythm and its<br/>mnemonic, played three times.<br/><i>Nothing to answer.</i>"]
         S2["<b>2 · Tell them apart</b><br/>One character at a time.<br/>You are told the answer every time.<br/><i>12 correct to pass.</i>"]
         S3["<b>3 · Copy groups of five</b><br/>Real copying, at speed.<br/><i>90% to pass.</i>"]
-        S1 --> S2 --> S3
+        S4["<b>4 · Send it back</b><br/>Hear it, then key it yourself.<br/><i>Optional. 10 clean to finish.</i>"]
+        S1 --> S2 --> S3 --> S4
     end
 
     S3 -->|"90%"| NEW[["New character unlocks<br/>— back to step 1"]]
@@ -60,6 +61,7 @@ flowchart TD
     style S1 fill:#13181B,stroke:#F5A623,color:#DCE4E8
     style S2 fill:#13181B,stroke:#4FB6C4,color:#DCE4E8
     style S3 fill:#13181B,stroke:#54C98D,color:#DCE4E8
+    style S4 fill:#13181B,stroke:#B27BD6,color:#DCE4E8
     style NEW fill:#191407,stroke:#F5A623,color:#F5A623
 ```
 
@@ -77,12 +79,12 @@ flowchart TD
 
 | Tab | What it does |
 |---|---|
-| **Learn** | Koch lessons, 40 characters, two new ones at a time, in the three steps above |
+| **Learn** | Koch lessons, 40 characters, two new ones at a time, in the four steps above |
 | **Letters** | The whole character set with patterns and mnemonics — tap any cell to hear it |
 | **Words** | Q-codes, abbreviations, prosigns, numbers and plain English as whole-word sounds |
 | **Callsigns** | Real US formats (1×2, 2×1, 1×3, 2×2, 2×3) plus DX prefixes, sent twice like a real caller |
 | **QSO** | Four complete contacts: answering a CQ, calling CQ, a POTA/contest exchange, and one where everything goes wrong |
-| **Sending** | Straight key or iambic keyer — keyboard, touch pads, with a live decoder and a dah:dit ratio meter |
+| **Sending** | Straight key or iambic keyer — tap the screen, short press for a dit and long for a dah, with a live decoder and a dah:dit ratio meter |
 | **Reference** | Prosigns, 20 Q-codes, ~60 abbreviations, RST tables, your first contact word for word, and where to find slow CW on the air |
 
 Put your own callsign in under the gear and it flows through the QSO scripts,

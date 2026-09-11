@@ -5,13 +5,16 @@
 const STEPS = [
   {n:1, t:"Meet the sound"},
   {n:2, t:"Tell them apart"},
-  {n:3, t:"Copy groups"}
+  {n:3, t:"Copy groups"},
+  {n:4, t:"Send it back"}
 ];
 const PICK_TARGET = 12;   // correct answers needed in step 2
+const ECHO_TARGET = 10;   // characters keyed correctly in step 4
 
 const Koch = {
   stage:1, running:false,
   meetList:[], meetIdx:0,
+  echoCur:"", echoRight:0, echoPending:false,
   pickCur:"", pickRight:0, pickTries:0, pickPending:false,
   groups:[], idx:0, right:0, total:0, cur:"", buf:"", repeating:false,
 
@@ -41,17 +44,21 @@ const Koch = {
     document.getElementById("st-meet").hidden  = stage !== 1;
     document.getElementById("st-pick").hidden  = stage !== 2;
     document.getElementById("st-group").hidden = stage !== 3;
+    document.getElementById("st-echo").hidden  = stage !== 4;
 
-    document.getElementById("k-kicker").textContent = "Lesson " + P.lesson + " · Step " + stage + " of 3";
+    document.getElementById("k-kicker").textContent =
+      "Lesson " + P.lesson + " · Step " + stage + " of " + STEPS.length;
     const titles = {
       1: P.lesson === 1 ? "Meet K and M" : "Meet " + nw.join(" and "),
       2: "Tell them apart",
-      3: "Copy groups of five"
+      3: "Copy groups of five",
+      4: "Send them back"
     };
     const subs = {
       1: "Nothing to answer yet. You just listen until the sound sticks.",
       2: "One character at a time, and it tells you the answer every time. " + PICK_TARGET + " correct moves you on.",
-      3: P.groupsPerLesson + " groups of five. 90% unlocks the next character."
+      3: P.groupsPerLesson + " groups of five. 90% unlocks the next character.",
+      4: "Hear a character, key it back. " + ECHO_TARGET + " clean to finish. Optional, but it is how the sound gets into your hand."
     };
     document.getElementById("k-title").textContent = titles[stage];
     document.getElementById("k-sub").textContent = subs[stage];
@@ -60,6 +67,7 @@ const Koch = {
 
     /* stepper */
     const mx = this.maxStage();
+    const echoed = (P.echoDone || {})[P.lesson];
     document.getElementById("k-stepper").innerHTML = STEPS.map(st =>
       '<li><button data-step="'+st.n+'"'
       + (st.n > mx ? " disabled" : "")
@@ -105,7 +113,111 @@ const Koch = {
   start(){
     if(this.stage === 1) this.startMeet();
     else if(this.stage === 2) this.startPick();
-    else this.startGroups();
+    else if(this.stage === 3) this.startGroups();
+    else this.startEcho();
+  },
+
+  /* ================= STEP 4 — SEND IT BACK ================= */
+  /* Copying teaches your ears. This teaches your hand, on the same characters,
+     while they are still fresh. It is optional: the next lesson already
+     unlocked at step 3, because not everyone has the dexterity on day one and
+     nobody should be blocked from learning more sounds by a touchscreen. */
+  startEcho(){
+    this.halt();
+    this.running = true;
+    this.echoRight = 0;
+    document.getElementById("k-start").textContent = "Restart";
+    ["echo-hear","echo-skip","echo-stop"].forEach(id => document.getElementById(id).disabled = false);
+    this.renderEchoPads();
+    this.askEcho();
+  },
+  renderEchoPads(){
+    const pads = document.getElementById("echo-pads");
+    const straight = (P.keyMode || "straight") === "straight";
+    pads.className = straight ? "keywrap" : "keywrap two";
+    pads.innerHTML = straight
+      ? '<button class="keysurface" data-key="straight">' +
+          '<span class="ks-mark" id="echo-mark">·</span>' +
+          '<span class="ks-hint" id="echo-hint">hold to key</span></button>'
+      : '<button class="keysurface" data-key="dit"><span class="ks-mark" id="echo-mark">·</span><span class="ks-hint">dit</span></button>' +
+        '<button class="keysurface" data-key="dah"><span class="ks-mark is-dah">—</span><span class="ks-hint" id="echo-hint">dah</span></button>';
+    document.getElementById("echo-keys").innerHTML = straight
+      ? 'Short press is a <strong>dit</strong>, longer is a <strong>dah</strong> — the mark changes while you hold. Keyboard: <kbd>Space</kbd>.'
+      : 'Left pad dit, right pad dah. Keyboard: <kbd>&larr;</kbd> and <kbd>&rarr;</kbd>.';
+    bindKeySurface(pads);
+    Keyer.claim({
+      mode: straight ? "straight" : "paddle",
+      onElement: () => {
+        document.getElementById("echo-stream").textContent =
+          Keyer.elems ? patSpaced(Keyer.elems) : "";
+      },
+      onChar: ch => this.echoAnswer(ch),
+      onPreview: kind => keyPreview(
+        document.getElementById("echo-mark"), document.getElementById("echo-hint"), kind)
+    });
+  },
+  askEcho(){
+    if(!this.running) return;
+    const cs = this.chars(), nw = this.newChars();
+    this.echoCur = (Math.random() < 0.5 && nw.length) ? pick(nw) : pick(cs);
+    this.echoPending = true;
+    Keyer.reset();
+    document.getElementById("echo-stream").textContent = "";
+    document.getElementById("echo-readout").innerHTML = '<span class="pend">listen, then key it</span>';
+    document.getElementById("echo-rt").textContent = this.echoRight + " of " + ECHO_TARGET + " sent clean";
+    const v = document.getElementById("echo-v");
+    v.className = "verdict neutral";
+    v.textContent = "Key what you just heard.";
+    play(this.echoCur, {ewpm:S.ewpm});
+  },
+  echoAnswer(ch){
+    if(!this.running || !this.echoPending) return;
+    this.echoPending = false;
+    const right = ch === this.echoCur;
+    const ro = document.getElementById("echo-readout");
+    const v = document.getElementById("echo-v");
+    logChar(this.echoCur, right);
+    if(right){
+      this.echoRight++;
+      ro.innerHTML = '<span class="ok">'+esc(ch)+'</span>';
+      v.className = "verdict ok";
+      v.textContent = ch + " — clean. " + sayPattern(MORSE[ch]) + ".";
+      document.getElementById("echo-rt").textContent = this.echoRight + " of " + ECHO_TARGET + " sent clean";
+      if(this.echoRight >= ECHO_TARGET){ setTimeout(() => this.echoDone(), 800); return; }
+      setTimeout(() => this.askEcho(), 800);
+    } else {
+      ro.innerHTML = '<span class="bad">'+esc(ch)+'</span> <span class="ok">'+esc(this.echoCur)+'</span>';
+      v.className = "verdict bad";
+      v.textContent = "That decoded as " + (ch === "·" ? "nothing readable" : ch)
+        + ". It was " + this.echoCur + " — " + sayPattern(MORSE[this.echoCur]) + ". Listen and try again.";
+      save();
+      setTimeout(() => {
+        if(!this.running) return;
+        play(this.echoCur, {ewpm:S.ewpm, onDone:() => {
+          if(!this.running) return;
+          Keyer.reset();
+          document.getElementById("echo-stream").textContent = "";
+          this.echoPending = true;
+          document.getElementById("echo-v").textContent = "Key it again.";
+          document.getElementById("echo-v").className = "verdict neutral";
+        }});
+      }, 900);
+    }
+  },
+  echoDone(){
+    this.running = false;
+    this.echoPending = false;
+    Keyer.release();
+    markToday();
+    P.echoDone = P.echoDone || {};
+    P.echoDone[P.lesson] = true;
+    save();
+    ["echo-hear","echo-skip","echo-stop"].forEach(id => document.getElementById(id).disabled = true);
+    document.getElementById("k-start").textContent = "Start";
+    const v = document.getElementById("echo-v");
+    v.className = "verdict ok";
+    v.textContent = ECHO_TARGET + " sent clean. These characters are in your hand as well as your ear.";
+    this.render();
   },
 
   /* ================= STEP 1 — MEET ================= */
@@ -299,8 +411,12 @@ const Koch = {
     document.getElementById("k-scopelab").textContent = "Lesson complete";
     paintEntry(document.getElementById("k-entry"), "", false, "lesson complete");
     const v = document.getElementById("k-verdict");
+    if(pct >= 90) this.reach(4);
     if(pct >= 90 && P.lesson < KOCH.length - 1){
+      const passed = P.lesson;
       P.lesson++;
+      P.stageByLesson = P.stageByLesson || {};
+      if(!P.stageByLesson[passed] || P.stageByLesson[passed] < 4) P.stageByLesson[passed] = 4;
       this.stage = 1;
       v.className = "verdict ok";
       v.textContent = pct + "% — passed. Lesson " + P.lesson + " is ready: " + this.chars().slice(-1)[0] + " is the new character.";
@@ -321,9 +437,15 @@ const Koch = {
     if(this.stage === 1) this.playMeet();
     else if(this.stage === 2 && this.running) play(this.pickCur, {ewpm:S.ewpm});
     else if(this.stage === 3 && this.running) play(this.cur, {ewpm:S.ewpm});
+    else if(this.stage === 4 && this.running) play(this.echoCur, {ewpm:S.ewpm});
   },
   stop(){
     this.halt();
+    Keyer.release();
+    this.echoPending = false;
+    ["echo-hear","echo-skip","echo-stop"].forEach(id => {
+      const e = document.getElementById(id); if(e) e.disabled = true;
+    });
     document.getElementById("k-start").textContent = "Start";
     ["k-replay","k-slower","k-stop","pick-replay","pick-stop"].forEach(id => document.getElementById(id).disabled = true);
     document.getElementById("k-scopelab").textContent = "Listen";
@@ -362,3 +484,11 @@ document.getElementById("k-keypad").addEventListener("click", e => {
 });
 document.getElementById("k-back").addEventListener("click", () => { if(P.lesson>1){ P.lesson--; Koch.stage = Koch.maxStage(); save(); Koch.render(); } });
 document.getElementById("k-fwd").addEventListener("click",  () => { if(P.lesson<KOCH.length-1){ P.lesson++; Koch.stage = 1; save(); Koch.render(); } });
+
+document.getElementById("echo-hear").addEventListener("click", () => {
+  if(Koch.running) play(Koch.echoCur, {ewpm:S.ewpm});
+});
+document.getElementById("echo-skip").addEventListener("click", () => {
+  if(Koch.running){ Koch.echoPending = false; Koch.askEcho(); }
+});
+document.getElementById("echo-stop").addEventListener("click", () => Koch.stop());

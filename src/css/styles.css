@@ -302,17 +302,32 @@ td.mean{color:var(--ink-2)}
 .q-en{font-size:13.5px;color:var(--dim)}
 
 /* ---------------- pads ---------------- */
-.pads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pads.single{grid-template-columns:1fr}
-.pad{
-  appearance:none;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;
-  background:linear-gradient(180deg,var(--raised-1),var(--raised-2));border:1px solid var(--panel-3);border-radius:var(--r);
-  padding:28px 12px;color:var(--ink-2);font-family:var(--f-mono);font-size:26px;letter-spacing:.2em;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
+.keywrap{display:grid;grid-template-columns:1fr;gap:8px}
+.keywrap.two{grid-template-columns:1fr 1fr}
+.keysurface{
+  appearance:none;cursor:pointer;user-select:none;-webkit-user-select:none;
+  touch-action:none;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,var(--raised-1),var(--raised-2));
+  border:1px solid var(--panel-3);border-radius:var(--r);
+  padding:22px 12px;min-height:118px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  transition:background .06s linear,border-color .06s linear;
 }
-.pad small{font-family:var(--f-panel);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
-.pad.down{background:var(--amber);color:var(--on-amber);border-color:var(--amber-line)}
-.pad.down small{color:var(--on-amber-dim)}
+.keysurface.down{background:var(--amber);border-color:var(--amber-line)}
+.ks-mark{
+  font-family:var(--f-mono);font-size:44px;line-height:1;color:var(--dim);
+  min-height:48px;display:flex;align-items:center;
+  transition:color .06s linear,transform .06s linear;
+}
+/* the live read of the press: a dit until it has been held long enough,
+   then it visibly becomes a dah. seeing that flip is how the timing sticks */
+.ks-mark.is-live{color:var(--on-amber)}
+.ks-mark.is-dah{letter-spacing:0;transform:scaleX(1.35)}
+.keysurface.down .ks-hint{color:var(--on-amber-dim)}
+.ks-hint{
+  font-family:var(--f-panel);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dimmer);text-align:center;min-height:1.2em;
+}
 .stream{font-family:var(--f-mono);font-size:15px;letter-spacing:.24em;color:var(--cool);min-height:1.5em;word-break:break-all}
 
 /* ---------------- blocks ---------------- */
@@ -515,6 +530,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
      the keypad last puts the controls back under the answer where they
      belong. No markup change, phones only. */
   .scope .keypad,.scope .stack .keypad{order:3}
+
+  /* The key was at y=521 on a 611px screen: you had to scroll down before you
+     could press anything, which reads as "there is no key". The pane is a
+     column flexbox, so pushing the readout below the key puts the thing you
+     press within reach and the thing you read just under it. DOM order is
+     unchanged, so the keyboard and screen-reader order still make sense. */
+  #pane-send .scope{order:2}
+  #pane-send .meters{order:3}
+  #pane-send details{order:4}
+
+  /* Same reasoning inside the Send it back step: the key goes directly under
+     the heading so it is always in reach, and what you just sent reads back
+     underneath it. */
+  #st-echo #echo-pads{order:1}
+  #st-echo #echo-keys{order:2}
+  #st-echo #echo-readout{order:3}
+  #st-echo #echo-stream{order:4}
+  #st-echo #echo-v{order:5}
+  #st-echo .row{order:6}
+  #st-echo .keysurface{min-height:104px;padding:18px 10px}
   .icobtn{width:40px;height:40px}
 
   /* start card: the button is the point, give it the full width */
@@ -548,8 +583,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .picker>.btn{flex:0 0 auto}
   .brand .sub{display:none}
   .scope{padding:13px 13px;gap:10px}
-  .pad{padding:32px 10px}
-  .meter{padding:9px 10px}
+    .meter{padding:9px 10px}
   .meter .m-v{font-size:17px}
   .hearstrip{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
   .meetbox{padding:8px 6px 4px}

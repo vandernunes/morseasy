@@ -65,6 +65,19 @@ at a time means one miss cascades.
 real copying. 90% unlocks the next character. Missed groups repeat once, scored
 on the first attempt only.
 
+**Stage 4 — Send it back.** You hear a character and key it yourself. Copying
+trains your ears; this trains your hand, on the same characters, while they are
+still fresh. Ten clean finishes the step.
+
+It is **optional on purpose**. The next lesson already unlocked at stage 3,
+because not everyone has the dexterity on day one and nobody should be stopped
+from learning new sounds by a touchscreen. The stepper marks it done when you
+finish it, so it is visible without being a gate.
+
+Keying speed is a separate setting from listening speed. Everyone copies faster
+than they can send, and at 20 wpm a dit has to be released inside 120 ms, which
+is not a reasonable first target with a thumb.
+
 Why three and not two? Recognition, cued recall and free recall are different
 skills. Jumping from "I have never heard this" to "copy five in a row" skips the
 middle one, and the middle one is where the sound actually becomes automatic.
