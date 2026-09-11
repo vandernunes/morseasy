@@ -96,8 +96,8 @@ works is not the same as deciding for them.
 |---|---|
 | **Home** | What to do next, in one button. Your progress, your streak, and the whole path laid out |
 | **Learn** | Koch lessons, 40 characters, two new ones at a time, in the four steps above |
-| **Words** | Q-codes, abbreviations, prosigns, numbers and plain English as whole-word sounds |
-| **Callsigns** | Real US formats (1×2, 2×1, 1×3, 2×2, 2×3) plus DX prefixes, sent twice like a real caller |
+| **Words** | Q-codes, abbreviations, prosigns, numbers and plain English as whole-word sounds. Rounds of ten, scored, with a best to beat |
+| **Callsigns** | Real US formats (1×2, 2×1, 1×3, 2×2, 2×3) plus DX prefixes, sent twice like a real caller. Rounds of ten |
 | **QSO** | Four complete contacts. **Listen** and copy, or **Work it** — their side plays and you key your replies back, turn by turn, until 73 |
 | **Sending** | Straight key or iambic keyer — tap the screen, short press for a dit and long for a dah, with a live decoder and a dah:dit ratio meter |
 | **Reference** | The character set with patterns and mnemonics (tap to hear), prosigns, 20 Q-codes, ~60 abbreviations, RST tables, your first contact word for word, and where to find slow CW |
@@ -121,6 +121,22 @@ so it runs identically on a plane, in a basement, or in a field with no bars.
 **Installing also stops iOS deleting your progress.** Safari clears
 script-writable storage after seven days without a visit, so a fortnight away
 costs you every lesson and your streak. Installed apps are exempt.
+
+### Moving to another device
+
+There is no account, so nothing syncs by itself. **Settings → Move to another
+device** gives you two ways to carry your progress across:
+
+- **Copy transfer link** — send it to yourself however you like (message, email,
+  AirDrop) and open it on the other device
+- **Save a backup file** — a small JSON file that restores everything
+
+The link keeps everything after the `#`. Browsers never send a URL fragment to
+a server, so even travelling as a link your practice history reaches nobody.
+
+An imported code is treated as untrusted: every key is whitelisted, every number
+clamped, every string filtered. Verified against a payload containing script
+tags, absurd numbers, junk keys and a prototype-pollution attempt.
 
 ### Your data
 

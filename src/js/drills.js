@@ -2,11 +2,13 @@
    Part of Morse Easy. Loaded as a classic script; see js/README for load order. */
 "use strict";
 
+const ROUND = 10;   // items per round
+
 const DRILL_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
 function makeDrill(prefix, cfg){
   const el = id => document.getElementById(prefix+"-"+id);
   const D = {
-    running:false, cur:"", buf:"", ok:0, no:0, streak:0, setKey:cfg.defaultSet,
+    running:false, cur:"", buf:"", ok:0, no:0, streak:0, done:0, setKey:cfg.defaultSet,
     answer(){ return (cfg.answer ? cfg.answer(this.cur) : this.cur).toUpperCase(); },
     show(){
       el("ok").textContent = this.ok;
@@ -17,19 +19,45 @@ function makeDrill(prefix, cfg){
     pad(){ buildKeypad(el("keypad"), DRILL_KEYS, {enter:true}); },
     start(){
       this.running = true;
+      this.ok = 0; this.no = 0; this.streak = 0; this.done = 0;
       el("start").textContent = "Restart";
       ["replay","reveal","stop"].forEach(i => el(i).disabled = false);
+      this.show();
       this.next();
+    },
+    /* A round ends. Endless practice has no shape to it - you stop when you get
+       bored, which is not the same as finishing, and nothing ever feels won. */
+    finish(){
+      this.running = false;
+      Keyer.release && Keyer.release();
+      ["replay","reveal","stop"].forEach(i => el(i).disabled = true);
+      el("start").textContent = "Play again";
+      P.bestRound = P.bestRound || {};
+      const prev = P.bestRound[prefix === "w" ? "words" : "calls"] || 0;
+      const isBest = this.ok > prev;
+      if(isBest) P.bestRound[prefix === "w" ? "words" : "calls"] = this.ok;
+      markToday(); save();
+      el("readout").innerHTML = '<span class="' + (this.ok >= 8 ? "ok" : "bad") + '">'
+        + this.ok + " / " + ROUND + "</span>";
+      const v = el("verdict");
+      v.className = "verdict " + (this.ok >= 8 ? "ok" : "neutral");
+      v.textContent = isBest && this.ok > 0
+        ? "Best round yet — " + this.ok + " of " + ROUND + "."
+        : this.ok >= 8 ? "Good round. " + this.ok + " of " + ROUND + "."
+        : this.ok + " of " + ROUND + ". Best so far is " + Math.max(prev, this.ok) + ".";
+      paintEntry(el("entry"), "", false, "round over");
+      if(typeof renderHome === "function") renderHome();
     },
     next(){
       if(!this.running) return;
+      if(this.done >= ROUND){ this.finish(); return; }
       this.cur = cfg.pick(this.setKey);
       this.buf = "";
       el("readout").innerHTML = '<span class="pend">listening</span>';
       paintEntry(el("entry"), "", true);
       el("verdict").className = "verdict neutral";
       el("verdict").textContent = cfg.prompt;
-      el("rt").textContent = "";
+      el("rt").textContent = (this.done + 1) + " of " + ROUND;
       this.play();
     },
     play(){ play(cfg.render ? cfg.render(this.cur) : this.cur, {ewpm:S.ewpm}); },
@@ -46,6 +74,7 @@ function makeDrill(prefix, cfg){
       const m = MEANING[this.cur];
       el("verdict").className = "verdict neutral";
       el("verdict").textContent = m ? this.answer() + " — " + m : "Shown. Next one coming.";
+      this.no++; this.streak = 0; this.done++; this.show();
       setTimeout(() => { if(this.running) this.next(); }, 2200);
     },
     check(){
@@ -66,15 +95,18 @@ function makeDrill(prefix, cfg){
         v.className = "verdict bad";
         v.textContent = "It was " + want + (m ? " — " + m : "") + ".";
       }
+      this.done++;
       this.show(); markToday(); save();
       setTimeout(() => { if(this.running) this.next(); }, hit ? 850 : 2100);
     },
     stop(){
       this.running = false; stopPlay();
       ["replay","reveal","stop"].forEach(i => el(i).disabled = true);
-      el("start").textContent = "Start";
+      el("start").textContent = this.done ? "Play again" : "Play";
       el("verdict").className = "verdict neutral";
-      el("verdict").textContent = "Stopped.";
+      el("verdict").textContent = this.done
+        ? "Stopped after " + this.done + " of " + ROUND + "."
+        : "Stopped.";
       paintEntry(el("entry"), "", false);
     }
   };
