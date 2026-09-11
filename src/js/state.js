@@ -18,7 +18,7 @@ const P = {
   lesson:1, stageByLesson:{}, bestByLesson:{}, charErr:{}, charOk:{}, sentOk:0,
   days:{}, seenHelp:false, theme:"system",
   groupsPerLesson:8, showPad:true, repeatMissed:true,
-  keyWpm:13, keyMode:"straight", sendSet:"common", sendMemory:false, qsoWork:false,
+  keyWpm:13, keyMode:"straight", sendSet:"common", sendMemory:false, qsoWork:false, qsoDone:0, bestRound:{},
   updatedAt:0
 };
 

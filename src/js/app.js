@@ -2,7 +2,7 @@
    Part of Morse Easy. Loaded as a classic script; see js/README for load order. */
 "use strict";
 
-let currentMode = "learn";
+let currentMode = "home";
 function setMode(m){
   currentMode = m;
   stopEverything();
@@ -12,6 +12,7 @@ function setMode(m){
   if(typeof endYourTurn === "function" && Q.awaiting) endYourTurn();
   document.querySelectorAll(".mbtn").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
   document.querySelectorAll(".pane").forEach(p => p.hidden = (p.id !== "pane-"+m));
+  if(m === "home" && typeof renderHome === "function") renderHome();
   window.scrollTo(0,0);
 }
 document.querySelector(".modes").addEventListener("click", e => {
@@ -135,6 +136,7 @@ function renderIdentity(){
 }
 function renderAll(){
   applyTheme();
+  if(typeof renderHome === "function") renderHome();
   renderSpeeds(); renderIdentity();
   Koch.render(); renderWordSets(); renderCallSets();
   Q.work = !!P.qsoWork;
