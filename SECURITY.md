@@ -12,8 +12,10 @@ Expect an acknowledgement within 72 hours.
 ## Scope
 
 Morse Easy is a static page. There is no backend, no database, no accounts, no
-cookies and no third-party requests beyond the Google Fonts stylesheet. All
-state lives in the visitor's own `localStorage` and never leaves their browser.
+cookies and **no third-party requests at all** — fonts are served from this
+origin and Cloudflare's Web Analytics beacon is disabled by a zone configuration
+rule. All state lives in the visitor's own `localStorage` and never leaves their
+browser.
 
 That leaves a small but real surface, and reports on any of it are welcome:
 

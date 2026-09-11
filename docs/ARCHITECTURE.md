@@ -171,6 +171,27 @@ Fonts are self-hosted for three reasons: the page then makes no third-party
 requests at all, the installed app renders correctly offline on first launch,
 and the CSP can name no external origin.
 
+## Cloudflare configuration that is not in this repo
+
+One setting lives in the Cloudflare zone rather than in version control, and it
+matters enough to write down.
+
+**Web Analytics is disabled by a configuration rule.** Cloudflare injects its
+`cloudflareinsights.com/beacon.min.js` at the edge into anything that looks like
+a browser response — it never appears in `dist/`, so no code review would catch
+it. A zone rule in the `http_config_settings` phase turns it off:
+
+```
+action:            set_config
+action_parameters: { "disable_rum": true }
+expression:        true
+```
+
+The CSP blocks the script regardless, so nothing was ever actually reported, but
+the README promises no tracking and a blocked request still logs a console error
+on every page load. The deploy workflow re-checks the served HTML for a beacon
+after every deploy and fails if one comes back.
+
 ## Deploy
 
 `main` → GitHub Actions → `build.py` → `check.py` → `wrangler pages deploy` →
