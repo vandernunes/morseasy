@@ -9,6 +9,19 @@ This project uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **Work a QSO, do not just listen to one.** The QSO tab gains a *Work it* mode:
+  their side plays, and when their over ends it is your turn — you key your
+  reply on the sticky key and nothing advances until you send it. Checked per
+  character; eight dits (`HH`) clears the line the way it does on the air.
+- **Sending is a drill.** Six sets — First 20, Q-codes, Numbers, Prosigns,
+  Callsigns, Phrases — scored with clean, missed and streak, plus a
+  *From memory* mode that hides the target after two seconds.
+- **A fourth lesson step, Send it back.** Hear a character, key it yourself.
+  Optional; the next lesson already unlocked at step 3.
+- **Touch keying.** One surface, short press for a dit and long for a dah, with
+  the mark flipping live as you cross the threshold. Keying speed is its own
+  setting, defaulting to 13 wpm.
+
 - **Installable, and works fully offline.** Service worker plus web manifest.
   Install from Settings, or Share → Add to Home Screen on iOS. Also exempts the
   app from Safari's seven-day storage eviction, which was silently costing

@@ -260,18 +260,33 @@
     <h2>Work a station</h2>
     <p>Each line is sent with the text hidden. Copy it in your head, then <strong>tap the line to reveal it</strong> and check. Your side is written the way you would actually send it &mdash; read along and you will have the script memorised before your first real call.</p>
   </div>
+  <div class="row picker" id="q-mode"></div>
   <div class="row picker" id="q-picker"></div>
   <div class="scope">
     <div class="scope-label"><span>On frequency</span><span class="rt" id="q-rt"></span></div>
     <div class="readout" id="q-readout"><span class="pend">standing by</span></div>
+    <div id="q-yourturn" hidden>
+      <div class="scope-label"><span>Your turn &mdash; key this</span><span class="rt" id="q-need"></span></div>
+      <div class="readout" id="q-send"></div>
+      <div class="scope-label"><span>Your fist</span></div>
+      <div class="fist">
+        <span class="fist-sent" id="q-decoded"><span class="pend">key it</span></span>
+        <span class="fist-elems" id="q-stream"></span>
+      </div>
+    </div>
     <div class="verdict neutral" id="q-verdict"></div>
     <div class="row">
       <button class="btn primary" id="q-play">Play first line</button>
       <button class="btn" id="q-replay" disabled>Replay line</button>
+      <button class="btn ghost" id="q-hearmine" hidden>Hear my line</button>
+      <button class="btn ghost" id="q-again" hidden>Start line again</button>
+      <button class="btn ghost" id="q-skip" hidden>Skip my turn</button>
       <button class="btn ghost" id="q-revealall">Reveal all</button>
       <button class="btn ghost" id="q-reset">Start over</button>
     </div>
   </div>
+  <div class="keywrap sticky" id="q-pads" hidden></div>
+  <div class="hint" id="q-keys" hidden></div>
   <div class="qso" id="q-lines"></div>
   <div class="cols">
     <div class="stack">

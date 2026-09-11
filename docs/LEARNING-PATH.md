@@ -105,13 +105,35 @@ exist because each one trains something the alphabet drill cannot:
 |---|---|
 | **Words** | Whole-word recognition. Experienced operators do not hear `C-Q` — they hear *CQ*, one shape. |
 | **Callsigns** | Copying with no context. No word shape, no grammar, nothing to predict from. This is the hardest thing in CW and the reason people freeze in pileups. |
-| **QSO** | Structure. Knowing what comes next means you only have to copy the part that varies. |
+| **QSO** | Structure. Knowing what comes next means you only have to copy the part that varies. In **Work it** mode you key your own side, so copying and sending happen in the same contact, under the same pressure. |
 | **Sending** | Timing awareness. The live decoder is honest: if it cannot read you, neither can the other operator. |
 
 The **QSO** tab deliberately includes a scenario where everything goes wrong —
 missed callsigns, fading, interference, someone sending too fast. `AGN?`,
 `QRS PSE` and `QRM HR` are what actually keep a beginner's contact alive, and
 most training material never mentions them.
+
+## Working a contact, not just hearing one
+
+The QSO tab has two modes. **Listen** plays every line for you to copy.
+**Work it** plays their side and makes you key yours.
+
+Three decisions in that mode are worth explaining.
+
+**Their over ending starts your turn, with no button.** On the air nobody
+prompts you; the silence is the prompt. Pressing "next" to continue would teach
+the wrong reflex.
+
+**You key a required subset, not the whole line.** The scripts are verbose
+because real operators pad, but demanding 120 flawless characters from a
+beginner punishes without teaching. Each of your turns carries a `send` field:
+the part the contact would genuinely fail without — the callsigns, the report,
+the name, the QTH, the 73. Spacing is not judged; characters are.
+
+**Eight dits clears the line.** That is `HH`, the real on-air "I made an error,
+here it comes again". Every app would give you a backspace. Learning the prosign
+instead is a skill you keep, and it is already in the Reference tab. There is a
+button too, for people who have not learned it yet.
 
 ## Things deliberately left out
 

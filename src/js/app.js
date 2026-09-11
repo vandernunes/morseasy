@@ -9,6 +9,7 @@ function setMode(m){
   if(Koch.running) Koch.stop();
   if(Words.running) Words.stop();
   if(Calls.running) Calls.stop();
+  if(typeof endYourTurn === "function" && Q.awaiting) endYourTurn();
   document.querySelectorAll(".mbtn").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
   document.querySelectorAll(".pane").forEach(p => p.hidden = (p.id !== "pane-"+m));
   window.scrollTo(0,0);
@@ -76,6 +77,7 @@ const held = new Set();
 function keyingActive(){
   if(currentMode === "send") return true;
   if(currentMode === "learn" && Koch.stage === 4) return true;
+  if(currentMode === "qso" && Q.awaiting) return true;
   return false;
 }
 function markKey(down){
@@ -106,7 +108,8 @@ function renderAll(){
   applyTheme();
   renderSpeeds(); renderIdentity();
   Koch.render(); renderWordSets(); renderCallSets();
-  renderQsoPicker(); renderQso();
+  Q.work = !!P.qsoWork;
+  renderQsoMode(); renderQsoPicker(); renderQso();
   Send.setKey = SEND_SETS[P.sendSet] ? P.sendSet : "common";
   Send.memory = !!P.sendMemory;
   Send.mode = P.keyMode || "straight";

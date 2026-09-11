@@ -49,7 +49,7 @@ flowchart TD
         direction TB
         W["<b>Ham Words</b><br/>CQ · DE · 73 · QTH · QSL · RST<br/>heard as one shape, not spelled out"]
         C["<b>Callsigns</b><br/>no word shape, no context,<br/>nothing to guess from"]
-        Q["<b>QSO</b><br/>four complete contacts,<br/>played line by line"]
+        Q["<b>QSO</b><br/>four complete contacts —<br/>listen, or key your side back"]
         SD["<b>Sending</b><br/>straight key or iambic paddle,<br/>with a live decoder on your fist"]
         W --> C --> Q --> SD
     end
@@ -83,7 +83,7 @@ flowchart TD
 | **Letters** | The whole character set with patterns and mnemonics — tap any cell to hear it |
 | **Words** | Q-codes, abbreviations, prosigns, numbers and plain English as whole-word sounds |
 | **Callsigns** | Real US formats (1×2, 2×1, 1×3, 2×2, 2×3) plus DX prefixes, sent twice like a real caller |
-| **QSO** | Four complete contacts: answering a CQ, calling CQ, a POTA/contest exchange, and one where everything goes wrong |
+| **QSO** | Four complete contacts. **Listen** and copy, or **Work it** — their side plays and you key your replies back, turn by turn, until 73 |
 | **Sending** | Straight key or iambic keyer — tap the screen, short press for a dit and long for a dah, with a live decoder and a dah:dit ratio meter |
 | **Reference** | Prosigns, 20 Q-codes, ~60 abbreviations, RST tables, your first contact word for word, and where to find slow CW on the air |
 
