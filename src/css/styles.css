@@ -376,9 +376,39 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
    ======================================================================= */
 @media (max-width:700px){
 
+  /* -------------------------------------------------------------------
+     The vertical budget is the whole game on a phone. A 390x664 viewport
+     was spending 101px on the header and 220px on the start card, so the
+     practice box and its keys - the only part you actually use - started
+     below the fold. Everything below buys that space back.
+     ------------------------------------------------------------------- */
+
   /* header scrolls away; speed chips go with it and are one scroll up */
   .rig-top{position:static}
-  .rig-top .wrap{padding-block:7px 6px}
+  .rig-top .wrap{padding-block:5px 4px;gap:4px}
+  .brand .call{font-size:19px}
+  .toprow{gap:8px}
+
+  /* the chip row is a horizontal scroller; fade the edge so that reads as
+     "there is more" instead of "this is clipped" */
+  .speeds{
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);
+            mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);
+    scroll-snap-type:x proximity;
+  }
+  .spd{scroll-snap-align:end}
+  .sp-lab{display:none}
+
+  /* tighter rhythm between the big blocks */
+  .pane{gap:13px}
+  .pane-head{padding-bottom:9px}
+
+  /* The start card repeated guidance that the practice box states again a
+     few hundred pixels lower. Drop the duplicate, keep what identifies the
+     lesson, and the card halves in height. */
+  .startcard .sc-p{display:none}
+  .startcard{gap:9px;padding:13px 14px}
+  .sc-k{font-size:10.5px;letter-spacing:.18em}
 
   /* tabs: fixed to the bottom, seven equal columns, thumb-sized */
   .modes{
@@ -403,7 +433,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .lab-short{display:inline}
 
   /* nothing may hide behind the bar */
-  main{padding-block:16px calc(74px + env(safe-area-inset-bottom,0px))}
+  main{padding-block:13px calc(72px + env(safe-area-inset-bottom,0px))}
 
   /* notch and rounded-corner safety on every full-width element */
   .wrap{
@@ -415,25 +445,48 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .spd{padding:8px 14px;min-height:38px;font-size:13px}
   .btn{min-height:44px}
   .btn.sm{min-height:38px}
+  .keypad{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:5px}
   .key{min-height:52px;font-size:18px}
+
+  /* The letters-and-digits pad is 36 keys - six rows, over 300px - and it sat
+     between the answer box and the Start button, so on Words and Callsigns
+     Start was off screen entirely. The scope is a column flexbox, so moving
+     the keypad last puts the controls back under the answer where they
+     belong. No markup change, phones only. */
+  .scope .keypad,.scope .stack .keypad{order:3}
   .icobtn{width:40px;height:40px}
 
   /* start card: the button is the point, give it the full width */
-  .startcard{padding:15px 16px;gap:13px}
-  .startcard .sc-txt{flex:1 1 100%}
+  .startcard .sc-txt{flex:1 1 100%;gap:2px}
   .startcard .btn.big{width:100%;min-height:54px}
   .sc-h{font-size:20px}
   .sc-chars{font-size:17px;letter-spacing:.28em}
 
   /* three steps, three columns — wrapping to 2+1 looked broken */
   .stepper li{flex:1 1 0;min-width:0}
-  .stepper button{flex-direction:column;gap:4px;padding:8px 4px;text-align:center;min-height:56px}
-  .stepper .t{font-size:10px;letter-spacing:.06em;white-space:normal;line-height:1.1}
+  .stepper button{flex-direction:row;gap:6px;padding:7px 6px;min-height:46px;align-items:center}
+  .stepper .n{width:19px;height:19px;font-size:10px}
+  .stepper .t{font-size:9.5px;letter-spacing:.04em;white-space:normal;line-height:1.1}
 
   .pane-head h2{font-size:21px}
-  .pane-head p{font-size:14.5px}
+
+  /* The intro paragraph runs to four lines on a phone and pushed Start off
+     screen on the drill tabs. The actionable version of the same guidance is
+     already inside the practice box a few lines down, and the method is in
+     the help sheet, so the phone keeps the title and drops the essay. */
+  .pane-head p{display:none}
+
+  /* Six set buttons wrapped to two rows and cost another ~50px. One
+     horizontal row with a faded edge, same pattern as the speed chips. */
+  .picker{
+    flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);
+            mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);
+  }
+  .picker::-webkit-scrollbar{display:none}
+  .picker>.btn{flex:0 0 auto}
   .brand .sub{display:none}
-  .scope{padding:15px 14px;gap:11px}
+  .scope{padding:13px 13px;gap:10px}
   .pad{padding:32px 10px}
   .meter{padding:9px 10px}
   .meter .m-v{font-size:17px}

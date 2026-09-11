@@ -48,3 +48,5 @@ dist/
 .wrangler/
 __pycache__/
 *.pyc
+node_modules/
+m-*.png
