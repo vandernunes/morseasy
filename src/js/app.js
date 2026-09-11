@@ -5,7 +5,7 @@
 let currentMode = "learn";
 function setMode(m){
   currentMode = m;
-  stopPlay();
+  stopEverything();
   if(Koch.running) Koch.stop();
   if(Words.running) Words.stop();
   if(Calls.running) Calls.stop();
@@ -32,11 +32,7 @@ document.addEventListener("keydown", e => {
   /* Whichever key surface is live owns the keyboard: the Sending tab, or the
      Send it back step inside a lesson. */
   if(keyingActive()){
-    if(e.key === "Escape"){
-      e.preventDefault();
-      if(currentMode === "learn" && Koch.running) Koch.stop();
-      return;
-    }
+    if(e.key === "Escape"){ e.preventDefault(); stopEverything(); return; }
     const straight = (P.keyMode || "straight") === "straight";
     if(straight){
       if(e.key === " " || e.key === "Spacebar" || e.code === "Space" || e.key === "\\"){
@@ -55,10 +51,7 @@ document.addEventListener("keydown", e => {
   }
 
   const D = activeDrill();
-  if(e.key === "Escape"){
-    if(D){ e.preventDefault(); D.stop(); }
-    return;
-  }
+  if(e.key === "Escape"){ e.preventDefault(); stopEverything(); return; }
   if(e.key === " "){
     e.preventDefault();
     if(D) D.play ? D.play() : play(D.cur, {ewpm:S.ewpm});
@@ -70,6 +63,42 @@ document.addEventListener("keydown", e => {
   const k = e.key.toUpperCase();
   if(k.length === 1 && /[A-Z0-9.,?/]/.test(k)){ e.preventDefault(); D.key(k); }
 });
+
+/* ---------------------------------------------------------------------------
+   One way to stop everything.
+
+   Audio can be started from a dozen places - a lesson, a drill, a QSO line, a
+   reference chart - and until now the only way out of a running lesson was to
+   let it finish. Escape works everywhere, and a Stop button appears above the
+   tab bar whenever something is actually running, so there is always a visible
+   way out within thumb reach.
+   --------------------------------------------------------------------------- */
+function anythingRunning(){
+  return isPlaying() ||
+         (typeof Koch !== "undefined" && Koch.running) ||
+         (typeof Words !== "undefined" && Words.running) ||
+         (typeof Calls !== "undefined" && Calls.running) ||
+         (typeof Q !== "undefined" && Q.awaiting);
+}
+function stopEverything(){
+  stopPlay();
+  if(typeof Koch !== "undefined" && (Koch.running || Koch.stage === 4)) Koch.stop();
+  if(typeof Words !== "undefined" && Words.running) Words.stop();
+  if(typeof Calls !== "undefined" && Calls.running) Calls.stop();
+  if(typeof Q !== "undefined" && Q.awaiting && typeof endYourTurn === "function") endYourTurn();
+  if(typeof Keyer !== "undefined") Keyer.release();
+  /* Releasing the keyer is right for a lesson or a QSO turn that was cut
+     short, but the Sending tab's key must stay live - stopping the audio
+     there should not also kill the thing you are pressing. */
+  if(currentMode === "send" && typeof Send !== "undefined") Send.claim();
+  syncStopBar();
+}
+function syncStopBar(){
+  const bar = document.getElementById("stopbar");
+  if(bar) bar.hidden = !anythingRunning();
+}
+document.getElementById("stopbtn").addEventListener("click", stopEverything);
+setInterval(syncStopBar, 250);
 
 const held = new Set();
 

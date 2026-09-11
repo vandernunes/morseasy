@@ -198,6 +198,15 @@ function bindKeySurface(root){
     if(el.dataset.key === "straight") Keyer.up();
     else Keyer.padUp(el.dataset.key);
   };
+  /* iOS raises the selection magnifier and a Copy bubble on a long press,
+     which is exactly what keying a dah is. -webkit-touch-callout in the CSS
+     handles it on Safari; these stop any browser starting a selection or a
+     context menu from the same gesture. */
+  root.addEventListener("selectstart", e => e.preventDefault());
+  root.addEventListener("dragstart", e => e.preventDefault());
+  root.addEventListener("touchstart", e => { if(e.cancelable) e.preventDefault(); }, {passive:false});
+  root.addEventListener("touchmove", e => { if(e.cancelable) e.preventDefault(); }, {passive:false});
+
   root.addEventListener("pointerdown", start);
   root.addEventListener("pointerup", end);
   root.addEventListener("pointercancel", end);

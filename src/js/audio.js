@@ -75,6 +75,7 @@ function tokenize(text){
 }
 
 let playToken = 0, lamps = [], lampRAF = null;
+let playUntil = 0;   // audio-clock time the current transmission ends
 const lampEl = () => document.getElementById("lamp");
 function lampLoop(){
   const t = Sig.now();
@@ -105,10 +106,14 @@ function play(text, opts){
     chars.push({ch:tok, at:t});
   }
   lamps = marks;
+  playUntil = t;
   if(!lampRAF) lampRAF = requestAnimationFrame(lampLoop);
   const t0 = Sig.now(), total = t - t0;
   if(opts.onChar) chars.forEach(c => setTimeout(() => { if(playToken === my) opts.onChar(c.ch); }, Math.max(0,(c.at - t0)*1000)));
   if(opts.onDone) setTimeout(() => { if(playToken === my) opts.onDone(); }, Math.max(0, total*1000 + 60));
   return {seconds:total};
 }
-function stopPlay(){ playToken++; Sig.silence(); lamps = []; lampEl().classList.remove("on"); }
+function stopPlay(){ playToken++; playUntil = 0; Sig.silence(); lamps = []; lampEl().classList.remove("on"); }
+
+/* True while a transmission is still being played out. */
+function isPlaying(){ return !!Sig.ctx && Sig.now() < playUntil - 0.02; }
