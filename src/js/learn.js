@@ -134,7 +134,7 @@ const Koch = {
   renderEchoPads(){
     const pads = document.getElementById("echo-pads");
     const straight = (P.keyMode || "straight") === "straight";
-    pads.className = straight ? "keywrap" : "keywrap two";
+    pads.className = straight ? "keywrap sticky" : "keywrap two sticky";
     pads.innerHTML = straight
       ? '<button class="keysurface" data-key="straight">' +
           '<span class="ks-mark" id="echo-mark">·</span>' +

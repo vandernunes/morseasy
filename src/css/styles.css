@@ -330,6 +330,26 @@ td.mean{color:var(--ink-2)}
 }
 .stream{font-family:var(--f-mono);font-size:15px;letter-spacing:.24em;color:var(--cool);min-height:1.5em;word-break:break-all}
 
+/* what your fist is producing, right now, big enough to read while keying */
+.fist{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--rule);border-radius:var(--r);
+  background:var(--field);padding:12px 14px;min-height:74px;
+}
+.fist-sent{
+  font-family:var(--f-mono);font-weight:600;
+  font-size:clamp(26px,8vw,40px);letter-spacing:.16em;line-height:1.1;
+  word-break:break-word;flex:1 1 auto;
+}
+.fist-sent .ok{color:var(--good)}
+.fist-sent .bad{color:var(--miss);text-decoration:underline;text-underline-offset:5px}
+.fist-sent .pend{color:var(--faint);font-family:var(--f-panel);font-size:14px;letter-spacing:.18em;text-transform:uppercase}
+.fist-elems{
+  font-family:var(--f-mono);font-size:clamp(20px,6vw,28px);letter-spacing:.3em;
+  color:var(--amber-ink);min-width:2.5em;text-align:right;
+}
+.target-hidden{color:var(--faint);letter-spacing:.3em}
+
 /* ---------------- blocks ---------------- */
 .note{border-left:2px solid var(--amber);background:var(--note-bg);padding:12px 15px;border-radius:0 var(--r) var(--r) 0;font-size:14.5px;color:var(--ink-2)}
 .note strong{color:var(--ink);font-weight:600}
@@ -536,19 +556,17 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
      column flexbox, so pushing the readout below the key puts the thing you
      press within reach and the thing you read just under it. DOM order is
      unchanged, so the keyboard and screen-reader order still make sense. */
-  #pane-send .scope{order:2}
-  #pane-send .meters{order:3}
-  #pane-send details{order:4}
-
-  /* Same reasoning inside the Send it back step: the key goes directly under
-     the heading so it is always in reach, and what you just sent reads back
-     underneath it. */
-  #st-echo #echo-pads{order:1}
-  #st-echo #echo-keys{order:2}
-  #st-echo #echo-readout{order:3}
-  #st-echo #echo-stream{order:4}
-  #st-echo #echo-v{order:5}
-  #st-echo .row{order:6}
+  /* The key sticks to the bottom of the screen, just above the tab bar, so it
+     is always under your thumb no matter where you have scrolled - and what
+     you are keying reads out directly above it, in the order you would
+     naturally look. Ordering it above the readout made it reachable but put
+     the feedback in the wrong place. */
+  .keywrap.sticky{
+    position:sticky;
+    bottom:calc(60px + env(safe-area-inset-bottom,0px));
+    z-index:20;padding-top:8px;
+    background:linear-gradient(180deg,transparent,var(--ground) 22%);
+  }
   #st-echo .keysurface{min-height:104px;padding:18px 10px}
   .icobtn{width:40px;height:40px}
 

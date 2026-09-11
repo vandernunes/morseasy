@@ -28,16 +28,27 @@ document.addEventListener("keydown", e => {
   const tag = (e.target.tagName||"").toLowerCase();
   if(tag === "input" || tag === "textarea") return;
 
-  /* sending mode owns the keyboard */
-  if(currentMode === "send"){
-    if(Send.mode === "straight"){
-      if(e.key === " " || e.key === "\\"){
+  /* Whichever key surface is live owns the keyboard: the Sending tab, or the
+     Send it back step inside a lesson. */
+  if(keyingActive()){
+    if(e.key === "Escape"){
+      e.preventDefault();
+      if(currentMode === "learn" && Koch.running) Koch.stop();
+      return;
+    }
+    const straight = (P.keyMode || "straight") === "straight";
+    if(straight){
+      if(e.key === " " || e.key === "Spacebar" || e.code === "Space" || e.key === "\\"){
         e.preventDefault();
-        if(!held.has("s")){ held.add("s"); document.querySelector('.pad[data-pad="key"]')?.classList.add("down"); Send.sDown(); }
+        if(!held.has("s")){ held.add("s"); markKey(true); Keyer.down(); }
       }
     } else {
-      if(e.key === "ArrowLeft" || e.key === "z" || e.key === "Z"){ e.preventDefault(); if(!held.has("d")){ held.add("d"); Send.padDown("dit"); } }
-      if(e.key === "ArrowRight" || e.key === "x" || e.key === "X"){ e.preventDefault(); if(!held.has("h")){ held.add("h"); Send.padDown("dah"); } }
+      if(e.key === "ArrowLeft" || e.key === "z" || e.key === "Z"){
+        e.preventDefault(); if(!held.has("d")){ held.add("d"); Keyer.padDown("dit"); }
+      }
+      if(e.key === "ArrowRight" || e.key === "x" || e.key === "X"){
+        e.preventDefault(); if(!held.has("h")){ held.add("h"); Keyer.padDown("dah"); }
+      }
     }
     return;
   }
@@ -60,12 +71,24 @@ document.addEventListener("keydown", e => {
 });
 
 const held = new Set();
+
+/* True when a key surface is on screen and ready to be keyed. */
+function keyingActive(){
+  if(currentMode === "send") return true;
+  if(currentMode === "learn" && Koch.stage === 4) return true;
+  return false;
+}
+function markKey(down){
+  document.querySelectorAll('.keysurface[data-key="straight"]')
+    .forEach(el => el.classList.toggle("down", down));
+}
+
 document.addEventListener("keyup", e => {
-  if(e.key === " " || e.key === "\\"){
-    if(held.delete("s")){ document.querySelector('.pad[data-pad="key"]')?.classList.remove("down"); Send.sUp(); }
+  if(e.key === " " || e.key === "Spacebar" || e.code === "Space" || e.key === "\\"){
+    if(held.delete("s")){ markKey(false); Keyer.up(); }
   }
-  if(e.key === "ArrowLeft" || e.key === "z" || e.key === "Z"){ if(held.delete("d")) Send.padUp("dit"); }
-  if(e.key === "ArrowRight" || e.key === "x" || e.key === "X"){ if(held.delete("h")) Send.padUp("dah"); }
+  if(e.key === "ArrowLeft" || e.key === "z" || e.key === "Z"){ if(held.delete("d")) Keyer.padUp("dit"); }
+  if(e.key === "ArrowRight" || e.key === "x" || e.key === "X"){ if(held.delete("h")) Keyer.padUp("dah"); }
 });
 
 function renderIdentity(){
@@ -77,14 +100,17 @@ function renderIdentity(){
     : "Free. No account, no tracking, nothing to install.";
   document.title = me ? me + " · Morse Easy" : "Morse Easy";
   renderScript(); renderQso();
-  Send.target = sub(Send.raw);
-  document.getElementById("s-target").textContent = Send.target;
+  Send.showTarget();
 }
 function renderAll(){
   applyTheme();
   renderSpeeds(); renderIdentity();
   Koch.render(); renderWordSets(); renderCallSets();
-  renderQsoPicker(); renderQso(); renderSend();
+  renderQsoPicker(); renderQso();
+  Send.setKey = SEND_SETS[P.sendSet] ? P.sendSet : "common";
+  Send.memory = !!P.sendMemory;
+  Send.mode = P.keyMode || "straight";
+  renderSendSets(); renderSend();
   Words.pad(); Calls.pad(); Words.show(); Calls.show();
   Send.paint();
 }
