@@ -63,3 +63,20 @@ jobs:
           done
           echo "::error::morseasy.com did not return 200 after the deploy"
           exit 1
+
+      # Cloudflare injects its Web Analytics beacon at the edge for anything
+      # that looks like a browser. It is turned off by a zone configuration
+      # rule (set_config disable_rum), which lives in Cloudflare and not in
+      # this repo - so nothing in a code review would catch it coming back.
+      # The README promises no tracking, so fail the deploy if it returns.
+      - name: No third-party beacon in the served page
+        run: |
+          UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36'
+          for host in https://morseasy.com https://www.morseasy.com; do
+            body=$(curl -s -A "$UA" -H 'Accept: text/html' --max-time 20 "$host/")
+            if echo "$body" | grep -qiE 'cloudflareinsights|googletagmanager|google-analytics'; then
+              echo "::error::a third-party beacon is being injected into $host - check the zone's Web Analytics setting and the disable_rum configuration rule"
+              exit 1
+            fi
+            echo "$host: clean"
+          done
