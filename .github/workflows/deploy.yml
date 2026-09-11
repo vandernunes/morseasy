@@ -1,5 +1,8 @@
 name: deploy
 
+# Only ever runs on a push to main, which only happens through a reviewed and
+# merged pull request. It never runs on `pull_request`, so the Cloudflare
+# credentials are unreachable from a fork.
 on:
   push:
     branches: [main]
@@ -16,26 +19,30 @@ jobs:
   deploy:
     name: build, verify and ship to Cloudflare Pages
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: production
       url: https://morseasy.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: '20'
+          node-version: '24'
 
-      # A red check never ships. The deploy depends on this step passing.
+      # A red check never ships. The publish step below depends on this passing.
       - name: Build and run checks
         run: python3 scripts/check.py
 
       # Called directly rather than through cloudflare/wrangler-action, which
       # silently installed wrangler 3.90 and never exported the token.
+      # The token is scoped to Cloudflare Pages on one account and nothing else.
       - name: Publish to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
