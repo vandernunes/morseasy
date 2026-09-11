@@ -152,6 +152,62 @@ def main() -> int:
     ok("CSP default-src is 'none'", "default-src 'none'" in csp)
     ok("CSP forbids framing", "frame-ancestors 'none'" in csp)
 
+    print("\ntheme")
+
+    def tokens_in(block: str) -> set:
+        return set(re.findall(r"(--[a-z0-9-]+)\s*:", block))
+
+    root = css[css.index(":root{"): css.index("}", css.index(":root{"))]
+    media = re.search(
+        r"@media \(prefers-color-scheme:light\)\{(.*?)\n\}\n", css, re.S
+    )
+    attr = re.search(r':root\[data-theme="light"\]\{(.*?)\n\}', css, re.S)
+    ok("both light blocks exist", bool(media and attr),
+       "a viewer has three states: system (no stamp), light, dark - system needs "
+       "the media query, an explicit choice needs the attribute selector")
+
+    if media and attr:
+        m_tok, a_tok = tokens_in(media.group(1)), tokens_in(attr.group(1))
+        ok("the two light blocks define the same tokens", m_tok == a_tok,
+           f"only in media: {sorted(m_tok - a_tok)} | only in [data-theme]: "
+           f"{sorted(a_tok - m_tok)} - they must stay in step or the toggle and "
+           "the OS setting disagree")
+        root_tok = tokens_in(root)
+        ok("every light token has a dark default", m_tok <= root_tok,
+           f"missing from :root: {sorted(m_tok - root_tok)} - a token defined only "
+           "inside a theme block is undefined in the other theme")
+
+    used = set(re.findall(r"var\((--[a-z0-9-]+)", css))
+    declared = tokens_in(root) | (tokens_in(media.group(1)) if media else set())
+    ok("no colour references an undefined token", used <= declared,
+       f"undefined: {sorted(used - declared)}")
+
+    def _lum(h):
+        h = h.lstrip("#")
+        ch = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+        ch = [(v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4) for v in ch]
+        return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+
+    def contrast(a, b):
+        la, lb = _lum(a), _lum(b)
+        hi, lo = max(la, lb), min(la, lb)
+        return (hi + 0.05) / (lo + 0.05)
+
+    def val(block, name):
+        m = re.search(rf"{name}\s*:\s*(#[0-9A-Fa-f]{{6}})", block)
+        return m.group(1) if m else None
+
+    for label, block in (("dark", root), ("light", attr.group(1) if attr else "")):
+        ground = val(block, "--ground")
+        for tok, need in (("--ink", 4.5), ("--ink-2", 4.5), ("--dim", 4.5),
+                          ("--amber-ink", 4.5)):
+            colour = val(block, tok)
+            if not (ground and colour):
+                continue
+            r = contrast(colour, ground)
+            ok(f"{label}: {tok} reads on --ground ({r:.2f}:1)", r >= need,
+               f"{colour} on {ground} is {r:.2f}:1, below the {need}:1 body text needs")
+
     print("\nmobile layout")
     # A 320px phone minus the 14px gutters leaves 292px of content. Anything
     # that demands more than that pushes the page sideways, and a horizontally

@@ -3,10 +3,20 @@
 "use strict";
 
 const KEY = "morseasy-v1";
+
+/* Applied before anything renders. Reading the saved theme later means the
+   page paints dark first and then flips, which is worse than either theme. */
+(function noFlash(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    const t = raw && JSON.parse(raw).theme;
+    if(t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  }catch(e){}
+})();
 const P = {
   call:"", name:"", qth:"", rig:"",
   lesson:1, stageByLesson:{}, bestByLesson:{}, charErr:{}, charOk:{}, sentOk:0,
-  days:{}, seenHelp:false,
+  days:{}, seenHelp:false, theme:"system",
   groupsPerLesson:8, showPad:true, repeatMissed:true,
   updatedAt:0
 };
