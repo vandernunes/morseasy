@@ -50,8 +50,7 @@
   <div class="wrap">
     <button class="mbtn" role="tab" data-mode="home" aria-selected="true"><span class="lab-full">Home</span><span class="lab-short">Home</span></button>
     <button class="mbtn" role="tab" data-mode="learn" aria-selected="false"><span class="lab-full">Learn</span><span class="lab-short">Learn</span></button>
-    <button class="mbtn" role="tab" data-mode="words" aria-selected="false"><span class="lab-full">Words</span><span class="lab-short">Words</span></button>
-    <button class="mbtn" role="tab" data-mode="calls" aria-selected="false"><span class="lab-full">Callsigns</span><span class="lab-short">Calls</span></button>
+    <button class="mbtn" role="tab" data-mode="drills" aria-selected="false"><span class="lab-full">Drills</span><span class="lab-short">Drills</span></button>
     <button class="mbtn" role="tab" data-mode="qso" aria-selected="false"><span class="lab-full">QSO</span><span class="lab-short">QSO</span></button>
     <button class="mbtn" role="tab" data-mode="send" aria-selected="false"><span class="lab-full">Sending</span><span class="lab-short">Send</span></button>
     <button class="mbtn" role="tab" data-mode="sheet" aria-selected="false"><span class="lab-full">Reference</span><span class="lab-short">Ref</span></button>
@@ -217,66 +216,37 @@
   </details>
 </section>
 
-<!-- ================= WORDS ================= -->
-<section class="pane" id="pane-words" hidden>
+<!-- ================= DRILLS ================= -->
+<section class="pane" id="pane-drills" hidden>
   <div class="pane-head">
-    <span class="eyebrow">Whole-word sound</span>
-    <h2>Ham words on the air</h2>
-    <p>Experienced operators do not hear these letter by letter &mdash; they hear one shape, the way you hear your own callsign. Drill until the meaning arrives before the last character does.</p>
+    <span class="eyebrow">Rounds of ten &middot; copy what you hear</span>
+    <h2>Drills</h2>
+    <p>Whole words are heard as one shape, not spelled out. Callsigns have no shape at all &mdash; no context, nothing to predict from &mdash; which is why they are the hardest thing in CW and the drill that decides whether you can work a pileup.</p>
   </div>
-  <div class="row picker" id="w-sets"></div>
+  <div class="row picker" id="d-sets"></div>
   <div class="scope">
-    <div class="scope-label"><span>Listen</span><span class="rt" id="w-rt"></span></div>
-    <div class="readout" id="w-readout"><span class="pend">press start</span></div>
-    <div class="entry" id="w-entry"><span class="ph">your copy appears here</span></div>
-    <div class="verdict neutral" id="w-verdict">Pick a set, then press Start.</div>
-    <div class="keypad wide" id="w-keypad"></div>
+    <div class="scope-label"><span id="d-lab">Listen</span><span class="rt" id="d-rt"></span></div>
+    <div class="readout" id="d-readout"><span class="pend">press play</span></div>
+    <div class="entry" id="d-entry"><span class="ph">your copy appears here</span></div>
+    <div class="verdict neutral" id="d-verdict">Pick a set, then press Play.</div>
+    <div class="keypad wide" id="d-keypad"></div>
     <div class="row">
-      <button class="btn primary" id="w-start">Play &middot; 10 words</button>
-      <button class="btn" id="w-replay" disabled>Replay <kbd>Space</kbd></button>
-      <button class="btn ghost" id="w-reveal" disabled>Show it</button>
-      <button class="btn ghost" id="w-stop" disabled>Stop</button>
+      <button class="btn primary" id="d-start">Play &middot; 10</button>
+      <button class="btn" id="d-replay" disabled>Again <kbd>Space</kbd></button>
+      <button class="btn ghost" id="d-reveal" disabled>Show it</button>
+      <button class="btn ghost" id="d-stop" disabled>Stop</button>
     </div>
   </div>
   <div class="meters">
-    <div class="meter"><span class="m-k">Correct</span><span class="m-v good" id="w-ok">0</span></div>
-    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="w-no">0</span></div>
-    <div class="meter"><span class="m-k">Accuracy</span><span class="m-v" id="w-acc">&mdash;</span></div>
-    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="w-streak">0</span></div>
+    <div class="meter"><span class="m-k">Correct</span><span class="m-v good" id="d-ok">0</span></div>
+    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="d-no">0</span></div>
+    <div class="meter"><span class="m-k">Accuracy</span><span class="m-v" id="d-acc">&mdash;</span></div>
+    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="d-streak">0</span></div>
   </div>
-  <details class="more"><summary>Everything in this set</summary><div class="body">
-    <div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="w-table"></tbody></table></div>
+  <details class="more"><summary>What is in this set</summary><div class="body">
+    <div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="d-table"></tbody></table></div>
   </div></details>
-</section>
-
-<!-- ================= CALLSIGNS ================= -->
-<section class="pane" id="pane-calls" hidden>
-  <div class="pane-head">
-    <span class="eyebrow">The hardest thing to copy</span>
-    <h2>Callsign copy</h2>
-    <p>Callsigns break every shortcut your brain wants to use &mdash; no word shape, no context, no guessing from the first two characters. This drill decides whether you can work a pileup. Your own call is salted in so it comes back instantly.</p>
-  </div>
-  <div class="row picker" id="c-sets"></div>
-  <div class="scope">
-    <div class="scope-label"><span>Listen &mdash; sent twice</span><span class="rt" id="c-rt"></span></div>
-    <div class="readout" id="c-readout"><span class="pend">press start</span></div>
-    <div class="entry" id="c-entry"><span class="ph">your copy appears here</span></div>
-    <div class="verdict neutral" id="c-verdict">Sent twice, the way a real station calls.</div>
-    <div class="keypad wide" id="c-keypad"></div>
-    <div class="row">
-      <button class="btn primary" id="c-start">Play &middot; 10 calls</button>
-      <button class="btn" id="c-replay" disabled>Replay <kbd>Space</kbd></button>
-      <button class="btn ghost" id="c-reveal" disabled>Show it</button>
-      <button class="btn ghost" id="c-stop" disabled>Stop</button>
-    </div>
-  </div>
-  <div class="meters">
-    <div class="meter"><span class="m-k">Correct</span><span class="m-v good" id="c-ok">0</span></div>
-    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="c-no">0</span></div>
-    <div class="meter"><span class="m-k">Accuracy</span><span class="m-v" id="c-acc">&mdash;</span></div>
-    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="c-streak">0</span></div>
-  </div>
-  <div class="note"><strong>Partial copy is normal.</strong> If you get <em>?5EDB</em>, send <code>?5EDB DE &lt;your call&gt; K</code> or just <code>AGN?</code>. Nobody expects a perfect first copy &mdash; asking for a repeat is what the whole shorthand exists for.</div>
+  <div class="note"><strong>Partial copy is normal.</strong> On the air, if you only get <em>?5EDB</em> you answer <code>AGN?</code> and they send it again. Nobody expects a perfect first copy.</div>
 </section>
 
 <!-- ================= QSO ================= -->
@@ -286,7 +256,6 @@
     <h2>Work a station</h2>
     <p>Each line is sent with the text hidden. Copy it in your head, then <strong>tap the line to reveal it</strong> and check. Your side is written the way you would actually send it &mdash; read along and you will have the script memorised before your first real call.</p>
   </div>
-  <div class="row picker" id="q-mode"></div>
   <div class="row picker" id="q-picker"></div>
   <div class="scope">
     <div class="scope-label"><span>On frequency</span><span class="rt" id="q-rt"></span></div>
@@ -340,7 +309,6 @@
     <h2>Sending practice</h2>
     <p>Sending is easier than copying, and sending badly is the fastest way to be asked for repeats. Watch the decoded line: if this cannot read you, neither can the operator on the other end.</p>
   </div>
-  <div class="row picker" id="s-keymode"></div>
   <div class="row picker" id="s-sets"></div>
 
   <div class="scope">
@@ -405,9 +373,9 @@
     <h2>Everything you need on frequency</h2>
     <p>Once the lessons have the characters in your ear, this is the whole language. Roughly forty of these carry ninety percent of a normal contact.</p>
   </div>
-  <div class="stack"><h3 class="sec">Letters</h3><div class="alpha" id="a-letters"></div></div>
-  <div class="stack"><h3 class="sec">Numbers</h3><div class="alpha" id="a-numbers"></div></div>
-  <div class="stack"><h3 class="sec">Punctuation you will actually hear</h3><div class="alpha" id="a-punct"></div></div>
+  <details class="more"><summary>Letters</summary><div class="body"><div class="alpha" id="a-letters"></div></div></details>
+  <details class="more"><summary>Numbers</summary><div class="body"><div class="alpha" id="a-numbers"></div></div></details>
+  <details class="more"><summary>Punctuation</summary><div class="body"><div class="alpha" id="a-punct"></div></div></details>
   <div class="note"><strong>Cut numbers.</strong> In contests and reports operators shorten 0 to <code>T</code> and 9 to <code>N</code>. <em>5NN</em> is 599. Learn to hear both.</div>
 
   <div class="stack">
@@ -415,18 +383,9 @@
     <div class="script" id="sh-script"></div>
     <div class="hint">Answering a CQ is easier than calling one. Do that ten times before you ever call CQ yourself.</div>
   </div>
-  <div class="stack">
-    <h3 class="sec">Prosigns &mdash; sent as one run-together character</h3>
-    <div class="tbl-scroll"><table><thead><tr><th>Prosign</th><th>Sound</th><th>Means</th></tr></thead><tbody id="sh-pro"></tbody></table></div>
-  </div>
-  <div class="stack">
-    <h3 class="sec">Q-codes</h3>
-    <div class="tbl-scroll"><table><thead><tr><th>Code</th><th>Statement</th><th>As a question</th></tr></thead><tbody id="sh-q"></tbody></table></div>
-  </div>
-  <div class="stack">
-    <h3 class="sec">Abbreviations</h3>
-    <div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="sh-ab"></tbody></table></div>
-  </div>
+  <details class="more"><summary>Prosigns</summary><div class="body"><div class="tbl-scroll"><table><thead><tr><th>Prosign</th><th>Sound</th><th>Means</th></tr></thead><tbody id="sh-pro"></tbody></table></div></div></details>
+  <details class="more"><summary>Q-codes</summary><div class="body"><div class="tbl-scroll"><table><thead><tr><th>Code</th><th>Statement</th><th>As a question</th></tr></thead><tbody id="sh-q"></tbody></table></div></div></details>
+  <details class="more"><summary>Abbreviations</summary><div class="body"><div class="tbl-scroll"><table><thead><tr><th>Sent</th><th>Means</th></tr></thead><tbody id="sh-ab"></tbody></table></div></div></details>
   <details class="more"><summary>RST &mdash; the report you give and get</summary><div class="body">
     <div class="cols">
       <div class="tbl-scroll"><table><thead><tr><th>R</th><th>Readability</th></tr></thead><tbody id="sh-r"></tbody></table></div>
@@ -531,6 +490,11 @@
       <span class="k">Overall speed <b id="v-ewpm">8 wpm</b></span>
       <input type="range" id="ewpm" min="4" max="35" step="1" value="8">
       <span class="note-sm">Extra silence between characters. This is the knob you raise as you improve.</span>
+    </div>
+    <div class="field">
+      <span class="k">Your key</span>
+      <div class="seg" id="f-keymode"></div>
+      <span class="note-sm">A straight key times your own presses &mdash; short is a dit, long is a dah. An iambic paddle times them for you: one pad for dits, one for dahs.</span>
     </div>
     <div class="field">
       <span class="k">Your keying speed <b id="v-keywpm">13 wpm</b></span>

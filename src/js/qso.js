@@ -17,19 +17,9 @@ const Q = {idx:0, cur:0, open:{}, work:false, awaiting:false, need:"", sent:"", 
    would be punishing and would teach nothing extra. Each of your turns carries
    a `send` field: the part the contact would genuinely fail without - the
    callsigns, the report, the name, the QTH, the 73. That is what is checked. */
-function renderQsoMode(){
-  document.getElementById("q-mode").innerHTML =
-    ['<button class="btn sm '+(!Q.work?"primary":"ghost")+'" data-qmode="listen">Listen</button>',
-     '<button class="btn sm '+(Q.work?"primary":"ghost")+'" data-qmode="work">Work it &mdash; you key back</button>'
-    ].join("");
-}
-document.getElementById("q-mode").addEventListener("click", e => {
-  const b = e.target.closest("[data-qmode]");
-  if(!b) return;
-  Q.work = b.dataset.qmode === "work";
-  P.qsoWork = Q.work; save();
-  renderQsoMode(); resetQso();
-});
+/* One row instead of two: the mode is a single toggle that says what it will
+   switch to, followed by the four contacts. */
+function renderQsoMode(){ renderQsoPicker(); }
 
 function qsoNeedsYou(i){
   const l = QSOS[Q.idx].lines[i];
@@ -185,8 +175,11 @@ function resetQso(){
   renderQso();
 }
 function renderQsoPicker(){
-  document.getElementById("q-picker").innerHTML = QSOS.map((q,i) =>
-    '<button class="btn sm '+(i===Q.idx?"primary":"ghost")+'" data-q="'+i+'">'+esc(q.label)+'</button>').join("");
+  document.getElementById("q-picker").innerHTML =
+    '<button class="btn sm ' + (Q.work ? "primary" : "ghost") + '" data-qtoggle="1">'
+      + (Q.work ? "You key back" : "Listen only") + '</button>'
+    + QSOS.map((q,i) =>
+        '<button class="btn sm '+(i===Q.idx?"primary":"ghost")+'" data-q="'+i+'">'+esc(q.label)+'</button>').join("");
 }
 function renderQso(){
   const q = QSOS[Q.idx], me = P.call || "N5EDB";
@@ -237,6 +230,11 @@ function qPlayLine(i){
   });
 }
 document.getElementById("q-picker").addEventListener("click", e => {
+  if(e.target.closest("[data-qtoggle]")){
+    Q.work = !Q.work; P.qsoWork = Q.work; save();
+    renderQsoPicker(); resetQso();
+    return;
+  }
   const b = e.target.closest("[data-q]"); if(!b) return;
   Q.idx = +b.dataset.q;
   renderQsoPicker(); resetQso();

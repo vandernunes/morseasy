@@ -95,6 +95,8 @@ function syncSettingInputs(){
   const kw = document.getElementById("keywpm");
   kw.value = clamp(num(P.keyWpm, 13), 5, 30);
   document.getElementById("v-keywpm").textContent = kw.value + " wpm";
+  document.getElementById("f-keymode").innerHTML = [["straight","Straight key"],["paddle","Iambic paddle"]]
+    .map(([v,l]) => '<button data-km2="'+v+'" aria-pressed="'+((P.keyMode||"straight")===v)+'">'+l+'</button>').join("");
   document.getElementById("f-len").innerHTML = [5,8,12,20]
     .map(n => '<button data-len="'+n+'" aria-pressed="'+(P.groupsPerLesson===n)+'">'+n+'</button>').join("");
   document.getElementById("f-pad").innerHTML = [["on","Show"],["off","Hide"]]
@@ -137,6 +139,12 @@ document.getElementById("keywpm").addEventListener("input", e => {
     if(id === "f-rig")  P.rig = v;
     save(); renderIdentity();
   });
+});
+document.getElementById("f-keymode").addEventListener("click", e => {
+  const b = e.target.closest("[data-km2]"); if(!b) return;
+  P.keyMode = b.dataset.km2; save(); syncSettingInputs();
+  if(typeof Send !== "undefined"){ Send.mode = P.keyMode; renderSend(); Send.clear(); }
+  if(typeof Koch !== "undefined" && Koch.stage === 4 && Koch.running) Koch.renderEchoPads();
 });
 document.getElementById("f-len").addEventListener("click", e => {
   const b = e.target.closest("[data-len]"); if(!b) return;

@@ -196,10 +196,9 @@ document.getElementById("s-sets").addEventListener("click", e => {
 });
 
 function renderSend(){
+  Send.mode = P.keyMode || "straight";
   Send.showMeters();
-  document.getElementById("s-keymode").innerHTML = ["straight","paddle"].map(m =>
-    '<button class="btn sm '+(m===Send.mode?"primary":"ghost")+'" data-km="'+m+'">'+(m==="straight"?"Straight key":"Iambic paddle")+'</button>').join("");
-  const pads = document.getElementById("s-pads");
+    const pads = document.getElementById("s-pads");
   if(Send.mode === "straight"){
     pads.className = "keywrap sticky";
     pads.innerHTML =
@@ -220,11 +219,6 @@ function renderSend(){
   bindKeySurface(pads);
   Send.claim();
 }
-document.getElementById("s-keymode").addEventListener("click", e => {
-  const b = e.target.closest("[data-km]"); if(!b) return;
-  Send.mode = b.dataset.km; P.keyMode = b.dataset.km; save();
-  renderSend(); Send.clear();
-});
 document.getElementById("s-play").addEventListener("click", () => { Sig.resume(); Send.startRound(); });
 document.getElementById("s-skip").addEventListener("click", () => Send.newTarget());
 document.getElementById("s-peek").addEventListener("click", () => Send.peek());
