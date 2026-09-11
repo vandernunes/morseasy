@@ -54,9 +54,10 @@ graph — order *is* the dependency graph.
 | 8 | `letters.js` | Tap-to-hear character charts | `morse`, `audio` |
 | 9 | `drills.js` | `makeDrill()` plus the Words and Callsigns instances | 1–6 |
 | 10 | `qso.js` | Simulated contacts, played line by line | `content`, `audio`, `ui` |
-| 11 | `send.js` | Straight key and iambic keyer, live decoder, fist meters | `morse`, `audio` |
-| 12 | `reference.js` | Reference tables, first-contact script | `content`, `ui` |
-| 13 | `app.js` | Mode switching, global keys, boot. **Must be last.** | everything |
+| 11 | `keyer.js` | Presses to elements to characters; shared keying engine | `morse`, `audio`, `state` |
+| 12 | `send.js` | The Sending tab: target, decoder, fist meters | `keyer` |
+| 13 | `reference.js` | Reference tables, first-contact script | `content`, `ui` |
+| 14 | `app.js` | Mode switching, global keys, boot. **Must be last.** | everything |
 
 ### Rules that will bite you
 
