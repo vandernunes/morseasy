@@ -152,6 +152,44 @@ def main() -> int:
     ok("CSP default-src is 'none'", "default-src 'none'" in csp)
     ok("CSP forbids framing", "frame-ancestors 'none'" in csp)
 
+    print("\nmobile layout")
+    # A 320px phone minus the 14px gutters leaves 292px of content. Anything
+    # that demands more than that pushes the page sideways, and a horizontally
+    # scrolling body is the single most common way a layout breaks on a phone.
+    NARROW = 292
+    offenders = []
+    for prop, pattern in (("minmax", r"minmax\((\d+)px"), ("min-width", r"min-width: *(\d+)px")):
+        for m in re.finditer(pattern, css):
+            val = int(m.group(1))
+            if val > NARROW:
+                line = css[: m.start()].count("\n") + 1
+                offenders.append(f"{prop} {val}px at styles.css:{line}")
+    ok(
+        f"nothing demands more than {NARROW}px of width",
+        not offenders,
+        "these overflow a 320px phone and make the body scroll sideways: "
+        + "; ".join(offenders),
+    )
+    ok(
+        "tabs become a bottom bar on phones",
+        "position:fixed;top:auto;bottom:0" in css.replace(" ", ""),
+    )
+    ok(
+        "safe-area insets are respected",
+        css.count("env(safe-area-inset") >= 4,
+        "notched phones need padding from env(safe-area-inset-*) or content "
+        "slides under the home indicator",
+    )
+    ok(
+        "short tab labels exist for the narrow bar",
+        page.count("lab-short") == 7 and ".lab-short" in css,
+    )
+    ok(
+        "text inputs are at least 16px",
+        "font-size:16px" in css.replace(" ", "") or "font-size: 16px" in css,
+        "iOS zooms the whole page when you focus an input under 16px",
+    )
+
     print("\nescaping")
     ui = (SRC / "js" / "ui.js").read_text(encoding="utf-8")
     ok("esc() escapes quotes as well as angle brackets",

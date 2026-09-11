@@ -101,6 +101,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 }
 .mbtn:hover{color:var(--ink-2)}
 .mbtn[aria-selected=true]{color:var(--amber);border-bottom-color:var(--amber)}
+.lab-short{display:none}
 
 /* ---------------- stage ---------------- */
 main{padding-block:22px 70px}
@@ -364,11 +365,104 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .hearbtn .h-ch{font-family:var(--f-mono);font-size:17px;font-weight:600;color:var(--ink);line-height:1.2}
 .hearbtn .h-pat{font-family:var(--f-mono);font-size:13px;letter-spacing:.18em;color:var(--amber);line-height:1.3}
 
-@media (max-width:560px){
-  .pane-head h2{font-size:22px}
-  .mbtn{padding:10px 11px 8px;font-size:12.5px;letter-spacing:.1em}
-  .brand .sub{display:none}
-  .pad{padding:34px 10px}
+/* =======================================================================
+   MOBILE  —  below 700px the tab row becomes a fixed bottom bar.
+
+   Two stacked sticky bars cost ~110px of a ~650px viewport before any
+   content appears, and the tab row sat at the top where a thumb cannot
+   comfortably reach it. On a phone the header now scrolls away and the
+   tabs live at the bottom, within reach while you are tapping answers
+   one-handed.
+   ======================================================================= */
+@media (max-width:700px){
+
+  /* header scrolls away; speed chips go with it and are one scroll up */
+  .rig-top{position:static}
+  .rig-top .wrap{padding-block:7px 6px}
+
+  /* tabs: fixed to the bottom, seven equal columns, thumb-sized */
+  .modes{
+    position:fixed;top:auto;bottom:0;left:0;right:0;z-index:60;
+    border-bottom:0;border-top:1px solid var(--rule);
+    background:#0E1214;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    box-shadow:0 -8px 22px -16px #000;
+  }
+  .modes .wrap{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:0;
+    padding-inline:max(4px,env(safe-area-inset-left,0px));overflow:visible;
+  }
+  .mbtn{
+    padding:9px 2px 7px;font-size:10.5px;letter-spacing:.06em;
+    min-height:52px;display:flex;align-items:center;justify-content:center;
+    text-align:center;line-height:1.15;white-space:normal;
+    border-bottom:0;border-top:2px solid transparent;
+  }
+  .mbtn[aria-selected=true]{border-bottom-color:transparent;border-top-color:var(--amber)}
+  .lab-full{display:none}
+  .lab-short{display:inline}
+
+  /* nothing may hide behind the bar */
+  main{padding-block:16px calc(74px + env(safe-area-inset-bottom,0px))}
+
+  /* notch and rounded-corner safety on every full-width element */
+  .wrap{
+    padding-inline:max(14px,env(safe-area-inset-left,0px))
+                   max(14px,env(safe-area-inset-right,0px));
+  }
+
+  /* bigger targets: 44px is the minimum a finger hits reliably */
+  .spd{padding:8px 14px;min-height:38px;font-size:13px}
+  .btn{min-height:44px}
+  .btn.sm{min-height:38px}
+  .key{min-height:52px;font-size:18px}
+  .icobtn{width:40px;height:40px}
+
+  /* start card: the button is the point, give it the full width */
+  .startcard{padding:15px 16px;gap:13px}
+  .startcard .sc-txt{flex:1 1 100%}
+  .startcard .btn.big{width:100%;min-height:54px}
   .sc-h{font-size:20px}
-  .key{min-height:46px;font-size:17px}
+  .sc-chars{font-size:17px;letter-spacing:.28em}
+
+  /* three steps, three columns — wrapping to 2+1 looked broken */
+  .stepper li{flex:1 1 0;min-width:0}
+  .stepper button{flex-direction:column;gap:4px;padding:8px 4px;text-align:center;min-height:56px}
+  .stepper .t{font-size:10px;letter-spacing:.06em;white-space:normal;line-height:1.1}
+
+  .pane-head h2{font-size:21px}
+  .pane-head p{font-size:14.5px}
+  .brand .sub{display:none}
+  .scope{padding:15px 14px;gap:11px}
+  .pad{padding:32px 10px}
+  .meter{padding:9px 10px}
+  .meter .m-v{font-size:17px}
+  .hearstrip{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+  .meetbox{padding:8px 6px 4px}
+
+  /* dialogs become bottom sheets, which is where a thumb already is */
+  dialog{
+    width:100%;max-width:none;margin:auto auto 0;
+    border-radius:12px 12px 0 0;border-bottom:0;
+  }
+  .dlg-body{max-height:64vh;padding:14px 16px}
+  .dlg-head,.dlg-foot{padding-inline:16px}
+  .dlg-foot{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .dlg-foot .btn{flex:1 1 auto}
+}
+
+/* very narrow phones: let the tab labels shrink rather than clip */
+@media (max-width:360px){
+  .mbtn{font-size:9.5px;letter-spacing:0}
+  .keypad{grid-template-columns:repeat(auto-fit,minmax(42px,1fr))}
+}
+
+/* a phone held sideways has almost no height — reclaim it */
+@media (max-height:460px) and (orientation:landscape){
+  .modes{position:sticky;top:0;bottom:auto;border-top:0;border-bottom:1px solid var(--rule)}
+  .modes .wrap{display:flex;overflow-x:auto}
+  .mbtn{min-height:40px;padding:8px 10px}
+  main{padding-block:12px 24px}
+  .meetbox{padding:4px}
+  .meet-ch{font-size:clamp(40px,10vh,64px)}
 }
