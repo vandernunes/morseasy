@@ -596,6 +596,28 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .startcard .sc-p{display:none}
   #home-card .sc-p{display:block;font-size:13.5px}
 
+  /* The path is five descriptions; two lines each is enough to choose from,
+     and it takes the home screen from 2.6 screens to about 1.6. */
+  .ps-blurb{
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .path-step>button{padding:11px 12px;gap:10px}
+  .ps-title{font-size:15px}
+  .badges{grid-template-columns:repeat(4,1fr)}
+  .bg-label{display:none}
+  .badge{padding:8px 4px}
+
+  /* the lesson nudge buttons sit inside a disclosure and were 32px */
+  #k-back,#k-fwd{min-height:44px}
+
+  /* transcript lines carry a translation each; tighten them */
+  .q-txt{font-size:14px}
+  .q-en{font-size:12.5px}
+  .qline{padding:9px 12px;gap:3px}
+
+  details.more>summary{padding:12px 14px;min-height:46px;display:flex;align-items:center}
+
   /* four stats in a three-wide grid leaves a hole; two by two does not */
   #pane-home .meters{grid-template-columns:repeat(2,1fr)}
   .startcard{gap:9px;padding:13px 14px}
@@ -641,7 +663,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   /* bigger targets: 44px is the minimum a finger hits reliably */
   .spd{padding:8px 14px;min-height:38px;font-size:13px}
   .btn{min-height:44px}
-  .btn.sm{min-height:38px}
+  /* 38px was under the 44px a finger reliably hits, and these chips are the
+     most-tapped controls in the app. */
+  .btn.sm{min-height:44px;padding:8px 13px}
   .keypad{grid-template-columns:repeat(auto-fit,minmax(42px,1fr));gap:4px}
   .key{min-height:52px;font-size:18px}
 

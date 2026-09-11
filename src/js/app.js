@@ -7,8 +7,7 @@ function setMode(m){
   currentMode = m;
   stopEverything();
   if(Koch.running) Koch.stop();
-  if(Words.running) Words.stop();
-  if(Calls.running) Calls.stop();
+  if(Drill.running) Drill.stop();
   if(typeof endYourTurn === "function" && Q.awaiting) endYourTurn();
   document.querySelectorAll(".mbtn").forEach(b => b.setAttribute("aria-selected", String(b.dataset.mode === m)));
   document.querySelectorAll(".pane").forEach(p => p.hidden = (p.id !== "pane-"+m));
@@ -21,8 +20,7 @@ document.querySelector(".modes").addEventListener("click", e => {
 
 function activeDrill(){
   if(currentMode === "learn" && (Koch.running || Koch.stage === 1)) return Koch;
-  if(currentMode === "words" && Words.running) return Words;
-  if(currentMode === "calls" && Calls.running) return Calls;
+  if(currentMode === "drills" && Drill.running) return Drill;
   return null;
 }
 document.addEventListener("keydown", e => {
@@ -77,15 +75,13 @@ document.addEventListener("keydown", e => {
 function anythingRunning(){
   return isPlaying() ||
          (typeof Koch !== "undefined" && Koch.running) ||
-         (typeof Words !== "undefined" && Words.running) ||
-         (typeof Calls !== "undefined" && Calls.running) ||
+         (typeof Drill !== "undefined" && Drill.running) ||
          (typeof Q !== "undefined" && Q.awaiting);
 }
 function stopEverything(){
   stopPlay();
   if(typeof Koch !== "undefined" && (Koch.running || Koch.stage === 4)) Koch.stop();
-  if(typeof Words !== "undefined" && Words.running) Words.stop();
-  if(typeof Calls !== "undefined" && Calls.running) Calls.stop();
+  if(typeof Drill !== "undefined" && Drill.running) Drill.stop();
   if(typeof Q !== "undefined" && Q.awaiting && typeof endYourTurn === "function") endYourTurn();
   if(typeof Keyer !== "undefined") Keyer.release();
   /* Releasing the keyer is right for a lesson or a QSO turn that was cut
@@ -138,24 +134,25 @@ function renderAll(){
   applyTheme();
   if(typeof renderHome === "function") renderHome();
   renderSpeeds(); renderIdentity();
-  Koch.render(); renderWordSets(); renderCallSets();
+  Koch.render();
+  Drill.setKey = DRILL_SETS[P.drillSet] ? P.drillSet : "core";
+  renderDrillSets();
+  buildKeypad(document.getElementById("d-keypad"), DRILL_KEYS, {enter:true});
+  Drill.show();
   Q.work = !!P.qsoWork;
   renderQsoMode(); renderQsoPicker(); renderQso();
   Send.setKey = SEND_SETS[P.sendSet] ? P.sendSet : "common";
   Send.memory = !!P.sendMemory;
   Send.mode = P.keyMode || "straight";
   renderSendSets(); renderSend();
-  Words.pad(); Calls.pad(); Words.show(); Calls.show();
   Send.paint();
 }
 
 loadLocal();
 Koch.stage = Koch.maxStage();
-Words.setKey = "core"; Calls.setKey = "mine";
 renderAll();
 paintEntry(document.getElementById("k-entry"), "", false);
-paintEntry(document.getElementById("w-entry"), "", false);
-paintEntry(document.getElementById("c-entry"), "", false);
+paintEntry(document.getElementById("d-entry"), "", false);
 
 const setTop = () => document.documentElement.style.setProperty("--top-h", document.getElementById("rigtop").offsetHeight + "px");
 setTop();

@@ -26,13 +26,13 @@ const PATH = [
     progress: () => ({now: charsKnown(), of: TOTAL_CHARS, unit: "characters"})
   },
   {
-    id: "words", mode: "words", at: 10,
+    id: "words", mode: "drills", set: "core", at: 10,
     title: "Hear whole words",
     blurb: "CQ, 73, QTH and the rest, heard as one shape instead of spelled out letter by letter.",
     progress: () => ({now: bestOf("words"), of: 10, unit: "best round"})
   },
   {
-    id: "calls", mode: "calls", at: 20,
+    id: "calls", mode: "drills", set: "mycall", at: 20,
     title: "Copy callsigns",
     blurb: "No word shape, no context, nothing to predict from. The hardest thing in CW and the one that decides whether you can work a pileup.",
     progress: () => ({now: bestOf("calls"), of: 10, unit: "best round"})
@@ -103,7 +103,7 @@ function renderHome(){
     const cls = done ? "done" : ready ? "ready" : "later";
     const pct = Math.min(100, Math.round(100 * pr.now / pr.of));
     return '<li class="path-step ' + cls + '">'
-      + '<button data-goto="' + st.mode + '">'
+      + '<button data-goto="' + st.mode + '"' + (st.set ? ' data-set="' + st.set + '"' : '') + '>'
       + '<span class="ps-n">' + (done ? "&#10003;" : (i + 1)) + '</span>'
       + '<span class="ps-body">'
       +   '<span class="ps-title">' + esc(st.title) + '</span>'
@@ -163,5 +163,11 @@ function renderInstallCard(){
 /* every Continue / path button goes somewhere */
 document.getElementById("pane-home").addEventListener("click", e => {
   const b = e.target.closest("[data-goto]");
-  if(b) setMode(b.dataset.goto);
+  if(!b) return;
+  /* A path step can pick the set it means, so "Copy callsigns" lands on
+     callsigns rather than on whatever was selected last. */
+  if(b.dataset.set && typeof Drill !== "undefined" && DRILL_SETS[b.dataset.set]){
+    Drill.setKey = b.dataset.set; P.drillSet = b.dataset.set; save(); renderDrillSets();
+  }
+  setMode(b.dataset.goto);
 });

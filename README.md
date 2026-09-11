@@ -96,8 +96,7 @@ works is not the same as deciding for them.
 |---|---|
 | **Home** | What to do next, in one button. Your progress, your streak, and the whole path laid out |
 | **Learn** | Koch lessons, 40 characters, two new ones at a time, in the four steps above |
-| **Words** | Q-codes, abbreviations, prosigns, numbers and plain English as whole-word sounds. Rounds of ten, scored, with a best to beat |
-| **Callsigns** | Real US formats (1×2, 2×1, 1×3, 2×2, 2×3) plus DX prefixes, sent twice like a real caller. Rounds of ten |
+| **Drills** | Rounds of ten, scored. Nine sets: whole words, Q-codes, shorthand, prosigns, numbers, plain English, and callsigns (real US formats plus DX prefixes, sent twice like a real caller) |
 | **QSO** | Four complete contacts. **Listen** and copy, or **Work it** — their side plays and you key your replies back, turn by turn, until 73 |
 | **Sending** | Straight key or iambic keyer — tap the screen, short press for a dit and long for a dah, with a live decoder and a dah:dit ratio meter |
 | **Reference** | The character set with patterns and mnemonics (tap to hear), prosigns, 20 Q-codes, ~60 abbreviations, RST tables, your first contact word for word, and where to find slow CW |
@@ -165,7 +164,7 @@ flowchart LR
         direction TB
         H["index.html<br/><i>markup + head</i>"]
         CSS["css/styles.css"]
-        JS["js/ · 16 modules"]
+        JS["js/ · 17 modules"]
     end
 
     SRC --> B["scripts/build.py<br/><i>inlines everything</i>"]
@@ -190,14 +189,14 @@ morseasy/
 ├── src/
 │   ├── index.html          markup, head, script order
 │   ├── css/styles.css      the whole visual system
-│   └── js/                 16 modules, loaded in order (see docs/ARCHITECTURE.md)
+│   └── js/                 17 modules, loaded in order (see docs/ARCHITECTURE.md)
 ├── public/                 copied verbatim into dist/
 │   ├── sw.js               service worker — precache and offline
 │   ├── manifest.webmanifest
 │   └── fonts/ icons/       self-hosted, so there are no third-party requests
 ├── scripts/
 │   ├── build.py            src/ + public/ → dist/
-│   └── check.py            63 checks; run before every push
+│   └── check.py            67 checks; run before every push
 ├── docs/
 │   ├── ARCHITECTURE.md     module map, load order, the rules that bite
 │   └── LEARNING-PATH.md    the teaching method and why it is shaped this way

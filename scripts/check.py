@@ -73,6 +73,19 @@ def main() -> int:
         "override every tab renders at once",
     )
 
+    print("\nmarkup")
+    # An unclosed <details> silently swallows everything after it into the
+    # collapsed block - the page looks almost empty and nothing errors.
+    for tag in ("details", "section", "dialog"):
+        o = len(re.findall(rf"<{tag}[\s>]", page))
+        c = page.count(f"</{tag}>")
+        ok(f"<{tag}> tags are balanced", o == c,
+           f"{o} opened, {c} closed - an unclosed tag swallows the rest of the pane")
+    panes = set(re.findall(r'id="pane-([a-z]+)"', page))
+    tabs = set(re.findall(r'data-mode="([a-z]+)"', page))
+    ok("every tab has a pane and every pane has a tab", panes == tabs,
+       f"tabs without panes: {sorted(tabs - panes)} | panes without tabs: {sorted(panes - tabs)}")
+
     print("\nmodules")
     names = sorted(on_disk)
     decls: dict[str, list[str]] = {}
@@ -286,9 +299,12 @@ def main() -> int:
         "notched phones need padding from env(safe-area-inset-*) or content "
         "slides under the home indicator",
     )
+    tab_count = page.count('class="mbtn"')
     ok(
-        "short tab labels exist for the narrow bar",
-        page.count("lab-short") == 7 and ".lab-short" in css,
+        "every tab has a short label for the narrow bar",
+        tab_count > 0 and page.count("lab-short") == tab_count and ".lab-short" in css,
+        f"{tab_count} tabs but {page.count('lab-short')} short labels - the bottom "
+        "bar gives each tab about 50px and the full label will not fit",
     )
     ok(
         "text inputs are at least 16px",
