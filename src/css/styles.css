@@ -304,9 +304,18 @@ td.mean{color:var(--ink-2)}
 /* ---------------- pads ---------------- */
 .keywrap{display:grid;grid-template-columns:1fr;gap:8px}
 .keywrap.two{grid-template-columns:1fr 1fr}
+.keysurface,.keysurface *{
+  /* Holding for a dah is a long press, which iOS reads as "select this text"
+     and answers with the magnifier and a Copy bubble. Every one of these is
+     needed: callout kills the bubble, user-select kills the selection, and
+     touch-action stops the page panning under your thumb. */
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
 .keysurface{
-  appearance:none;cursor:pointer;user-select:none;-webkit-user-select:none;
-  touch-action:none;-webkit-tap-highlight-color:transparent;
+  appearance:none;cursor:pointer;
+  touch-action:none;
   background:linear-gradient(180deg,var(--raised-1),var(--raised-2));
   border:1px solid var(--panel-3);border-radius:var(--r);
   padding:22px 12px;min-height:118px;
@@ -368,6 +377,29 @@ details.more>summary::before{content:"▸ ";color:var(--amber-ink)}
 details.more[open]>summary::before{content:"▾ "}
 details.more>summary:hover{color:var(--ink-2)}
 details.more .body{padding:0 14px 14px;display:flex;flex-direction:column;gap:14px}
+
+/* Audio can start from a dozen places and there was no way to stop it except
+   waiting. This appears only while something is playing, sits above the tab
+   bar within thumb reach, and kills everything. */
+.stopbar{
+  position:fixed;left:0;right:0;z-index:70;
+  bottom:calc(60px + env(safe-area-inset-bottom,0px));
+  display:flex;justify-content:center;pointer-events:none;
+  padding-inline:16px;
+}
+.stopbar[hidden]{display:none!important}
+.stopbtn{
+  pointer-events:auto;appearance:none;cursor:pointer;
+  background:var(--miss);color:#fff;border:1px solid var(--miss);
+  border-radius:100px;padding:10px 22px;min-height:46px;
+  font-family:var(--f-panel);font-weight:700;font-size:14px;
+  letter-spacing:.14em;text-transform:uppercase;
+  box-shadow:0 6px 18px -8px var(--shadow-strong);
+  display:flex;align-items:center;gap:9px;
+}
+.stopbtn:hover{filter:brightness(1.08)}
+.stopbtn .sq{width:11px;height:11px;background:currentColor;border-radius:1px}
+.stop-esc{font-family:var(--f-mono);font-size:11px;opacity:.75;letter-spacing:0}
 
 footer{border-top:1px solid var(--rule);padding-block:16px 34px;color:var(--dimmer);font-size:13px}
 footer .wrap{display:flex;justify-content:space-between;gap:8px 18px;flex-wrap:wrap}
