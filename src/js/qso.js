@@ -165,6 +165,7 @@ function advanceQso(){
     const v = document.getElementById("q-verdict");
     v.className = "verdict ok";
     v.textContent = "Contact complete. That is a real QSO, start to finish.";
+    if(Q.work){ P.qsoDone = Math.min(4, (P.qsoDone || 0) + 1); }
     markToday(); save();
     return;
   }
@@ -228,6 +229,7 @@ function qPlayLine(i){
           const vv = document.getElementById("q-verdict");
           vv.className = "verdict ok";
           vv.textContent = "Contact complete. That is a real QSO, start to finish.";
+          if(Q.work){ P.qsoDone = Math.min(4, (P.qsoDone || 0) + 1); }
           markToday(); save();
         }, 700);
       }

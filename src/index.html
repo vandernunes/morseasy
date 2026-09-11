@@ -48,8 +48,8 @@
 
 <nav class="modes" role="tablist" aria-label="Practice modes">
   <div class="wrap">
-    <button class="mbtn" role="tab" data-mode="learn" aria-selected="true"><span class="lab-full">Learn</span><span class="lab-short">Learn</span></button>
-    <button class="mbtn" role="tab" data-mode="alphabet" aria-selected="false"><span class="lab-full">Letters</span><span class="lab-short">Letters</span></button>
+    <button class="mbtn" role="tab" data-mode="home" aria-selected="true"><span class="lab-full">Home</span><span class="lab-short">Home</span></button>
+    <button class="mbtn" role="tab" data-mode="learn" aria-selected="false"><span class="lab-full">Learn</span><span class="lab-short">Learn</span></button>
     <button class="mbtn" role="tab" data-mode="words" aria-selected="false"><span class="lab-full">Words</span><span class="lab-short">Words</span></button>
     <button class="mbtn" role="tab" data-mode="calls" aria-selected="false"><span class="lab-full">Callsigns</span><span class="lab-short">Calls</span></button>
     <button class="mbtn" role="tab" data-mode="qso" aria-selected="false"><span class="lab-full">QSO</span><span class="lab-short">QSO</span></button>
@@ -59,6 +59,45 @@
 </nav>
 
 <main class="wrap">
+
+<!-- ================= HOME ================= -->
+<section class="pane" id="pane-home">
+  <div class="startcard" id="home-card">
+    <div class="sc-txt">
+      <span class="sc-k" id="home-kicker">Start here</span>
+      <span class="sc-h" id="home-title">Learn Morse by ear</span>
+      <span class="sc-p" id="home-sub">Ten minutes a day beats an hour once a week.</span>
+    </div>
+    <button class="btn primary big" id="home-go">Start</button>
+  </div>
+
+  <div class="meters">
+    <div class="meter">
+      <span class="m-k">Characters known</span>
+      <span class="m-v amber" id="home-chars">0 / 40</span>
+      <span class="bar"><i id="home-bar"></i></span>
+    </div>
+    <div class="meter"><span class="m-k">Day streak</span><span class="m-v" id="home-streak">0</span></div>
+    <div class="meter"><span class="m-k">Sent clean</span><span class="m-v good" id="home-sent">0</span></div>
+    <div class="meter"><span class="m-k">Contacts worked</span><span class="m-v" id="home-qso">0</span></div>
+  </div>
+
+  <div class="stack">
+    <h3 class="sec">The path</h3>
+    <ol class="path" id="home-path"></ol>
+  </div>
+
+  <div class="stack" id="home-install-wrap">
+    <h3 class="sec">Keep it on your phone</h3>
+    <div class="note" id="home-install">Checking&hellip;</div>
+  </div>
+
+  <div class="stack">
+    <h3 class="sec">Milestones</h3>
+    <div class="badges" id="home-badges"></div>
+  </div>
+</section>
+
 
 <!-- ================= LEARN ================= -->
 <section class="pane" id="pane-learn">
@@ -176,19 +215,6 @@
       </div>
     </div>
   </details>
-</section>
-
-<!-- ================= LETTERS ================= -->
-<section class="pane" id="pane-alphabet" hidden>
-  <div class="pane-head">
-    <span class="eyebrow">Tap any cell to hear it</span>
-    <h2>The whole character set</h2>
-    <p>Read the sound column out loud &mdash; <em>di-dah</em>, not &ldquo;dot dash.&rdquo; The rhythm is what you are memorising. The mnemonics are a crutch for the first week; drop them as soon as you can.</p>
-  </div>
-  <div class="stack"><h3 class="sec">Letters</h3><div class="alpha" id="a-letters"></div></div>
-  <div class="stack"><h3 class="sec">Numbers</h3><div class="alpha" id="a-numbers"></div></div>
-  <div class="stack"><h3 class="sec">Punctuation you will actually hear</h3><div class="alpha" id="a-punct"></div></div>
-  <div class="note"><strong>Cut numbers.</strong> In contests and reports operators shorten 0 to <code>T</code> and 9 to <code>N</code>. <em>5NN</em> is 599. Learn to hear both.</div>
 </section>
 
 <!-- ================= WORDS ================= -->
@@ -378,6 +404,11 @@
     <h2>Everything you need on frequency</h2>
     <p>Once the lessons have the characters in your ear, this is the whole language. Roughly forty of these carry ninety percent of a normal contact.</p>
   </div>
+  <div class="stack"><h3 class="sec">Letters</h3><div class="alpha" id="a-letters"></div></div>
+  <div class="stack"><h3 class="sec">Numbers</h3><div class="alpha" id="a-numbers"></div></div>
+  <div class="stack"><h3 class="sec">Punctuation you will actually hear</h3><div class="alpha" id="a-punct"></div></div>
+  <div class="note"><strong>Cut numbers.</strong> In contests and reports operators shorten 0 to <code>T</code> and 9 to <code>N</code>. <em>5NN</em> is 599. Learn to hear both.</div>
+
   <div class="stack">
     <h3 class="sec">Your first contact, word for word</h3>
     <div class="script" id="sh-script"></div>
@@ -547,6 +578,7 @@
 <script src="js/send.js"></script>
 <script src="js/reference.js"></script>
 <script src="js/offline.js"></script>
+<script src="js/home.js"></script>
 <script src="js/app.js"></script>
 
 </body>

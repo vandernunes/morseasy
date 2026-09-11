@@ -453,6 +453,56 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .step .tx b{color:var(--ink);font-weight:600}
 
 
+/* ---------------- the path on the home screen ---------------- */
+.path{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+.path-step>button{
+  width:100%;text-align:left;appearance:none;cursor:pointer;border:0;
+  background:var(--panel);color:inherit;padding:13px 14px;
+  display:flex;gap:12px;align-items:flex-start;transition:background .12s;
+}
+.path-step>button:hover{background:var(--hover)}
+.ps-n{
+  flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--panel-3);color:var(--dim);
+  font-family:var(--f-mono);font-size:12px;font-weight:600;margin-top:1px;
+}
+.ps-body{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 auto}
+.ps-title{font-family:var(--f-panel);font-weight:700;font-size:16px;letter-spacing:.02em;color:var(--ink)}
+.ps-blurb{font-size:13.5px;color:var(--ink-2);line-height:1.45}
+.ps-meta{font-family:var(--f-panel);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
+.path-step .bar{margin-top:2px}
+
+/* now: the one to do next reads as the live one */
+.path-step.ready>button{background:var(--current-bg)}
+.path-step.ready .ps-n{background:var(--amber);color:var(--on-amber)}
+.path-step.ready .ps-meta{color:var(--amber-ink)}
+/* later: still clickable, just quieter - nothing here is locked */
+.path-step.later>button{opacity:.72}
+.path-step.later .ps-title{color:var(--ink-2)}
+.path-step.done .ps-n{background:var(--good-soft);color:var(--good)}
+.path-step.done>button{background:var(--panel)}
+
+/* ---------------- milestones ---------------- */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.badge{
+  display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;
+  padding:11px 8px;border:1px solid var(--rule);border-radius:var(--r);
+  background:var(--panel);opacity:.45;
+}
+.badge.got{opacity:1;border-color:var(--amber-soft);background:var(--current-bg)}
+.bg-icon{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--panel-3);color:var(--dim);
+  font-family:var(--f-mono);font-weight:600;font-size:14px;letter-spacing:.04em;
+}
+.badge.got .bg-icon{background:var(--amber);color:var(--on-amber)}
+.bg-label{font-family:var(--f-panel);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);line-height:1.2}
+.badge.got .bg-label{color:var(--ink-2)}
+
+/* the characters-known meter carries a bar, so give it room */
+.meter .bar{margin-top:6px}
+
 /* ---------------- lesson stepper ---------------- */
 .stepper{display:flex;gap:6px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 .stepper li{flex:1 1 160px;display:flex}
@@ -530,9 +580,17 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
   /* The start card repeated guidance that the practice box states again a
      few hundred pixels lower. Drop the duplicate, keep what identifies the
-     lesson, and the card halves in height. */
+     lesson, and the card halves in height. Home is the exception: its line
+     says what is actually coming next and nothing else repeats it. */
   .startcard .sc-p{display:none}
+  #home-card .sc-p{display:block;font-size:13.5px}
+
+  /* four stats in a three-wide grid leaves a hole; two by two does not */
+  #pane-home .meters{grid-template-columns:repeat(2,1fr)}
   .startcard{gap:9px;padding:13px 14px}
+  .ps-blurb{font-size:13px}
+  .badges{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
+  .bg-icon{width:34px;height:34px;font-size:13px}
   .sc-k{font-size:10.5px;letter-spacing:.18em}
 
   /* tabs: fixed to the bottom, seven equal columns, thumb-sized */
