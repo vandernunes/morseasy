@@ -163,5 +163,7 @@ window.addEventListener("resize", setTop);
 
 if(!P.seenHelp) setTimeout(() => dlgHelp.showModal(), 400);
 
+if(typeof checkTransferLink === "function") checkTransferLink();
+
 ["pointerdown","keydown"].forEach(ev =>
   document.addEventListener(ev, function once(){ Sig.resume(); document.removeEventListener(ev, once); }, {once:true}));

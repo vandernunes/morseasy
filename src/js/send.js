@@ -16,10 +16,12 @@ const SEND_PHRASES = ["CQ CQ DE {ME}","DE {ME} K","TNX FER CALL","UR RST 599","N
   "QTH {QTH}","73 ES CUL","QSL VIA LOTW","HW CPY?","AGN PSE","QRS PSE","GM OM","FB TNX",
   "RIG IS {RIG}","ANT IS DIPOLE","W4JQP DE {ME} KN","5NN TX","R TU 73"];
 
+const ROUND_SEND = 10;   // targets per round
+
 const Send = {
   target:"CQ CQ DE N5EDB", raw:"CQ CQ DE {ME}", text:"",
   mode:"straight", setKey:"common", memory:false,
-  ok:0, no:0, streak:0, hideTimer:null, hidden:false,
+  ok:0, no:0, streak:0, hideTimer:null, hidden:false, roundOn:false, done:0,
 
   claim(){
     Keyer.claim({
@@ -39,6 +41,37 @@ const Send = {
     if(this.setKey === "phrases") return sub(pick(SEND_PHRASES));
     if(this.setKey === "call") return (P.call && Math.random() < 0.4) ? P.call : usCall();
     return pick(SEND_SETS[this.setKey].items).replace(/[<>]/g, "");
+  },
+  /* A round of ten, so sending has an end and a score instead of running until
+     you get bored. Getting bored and finishing are not the same feeling. */
+  startRound(){
+    this.roundOn = true;
+    this.ok = 0; this.no = 0; this.streak = 0; this.done = 0;
+    this.showMeters();
+    document.getElementById("s-play").textContent = "Restart round";
+    document.getElementById("s-skip").hidden = false;
+    this.newTarget();
+  },
+  finishRound(){
+    this.roundOn = false;
+    clearTimeout(this.hideTimer);
+    P.bestRound = P.bestRound || {};
+    const prev = P.bestRound.send || 0;
+    const best = this.ok > prev;
+    if(best) P.bestRound.send = this.ok;
+    markToday(); save();
+    document.getElementById("s-play").textContent = "Play again";
+    document.getElementById("s-skip").hidden = true;
+    document.getElementById("s-peek").hidden = true;
+    document.getElementById("s-target").innerHTML =
+      '<span class="' + (this.ok >= 8 ? "ok" : "bad") + '">' + this.ok + " / " + ROUND_SEND + "</span>";
+    const v = document.getElementById("s-verdict");
+    v.className = "verdict " + (this.ok >= 8 ? "ok" : "neutral");
+    v.textContent = best && this.ok > 0
+      ? "Best round yet — " + this.ok + " of " + ROUND_SEND + " sent clean."
+      : this.ok + " of " + ROUND_SEND + " sent clean. Best so far is " + Math.max(prev, this.ok) + ".";
+    this.text = ""; Keyer.reset(); this.paint();
+    if(typeof renderHome === "function") renderHome();
   },
   newTarget(){
     clearTimeout(this.hideTimer);
@@ -65,8 +98,9 @@ const Send = {
     } else {
       el.textContent = this.target;
     }
-    document.getElementById("s-rt").textContent =
-      (this.ok + this.no) ? Math.round(100 * this.ok / (this.ok + this.no)) + "% clean" : "";
+    document.getElementById("s-rt").textContent = this.roundOn
+      ? (this.done + 1) + " of " + ROUND_SEND
+      : ((P.bestRound || {}).send ? "best round " + P.bestRound.send + " / " + ROUND_SEND : "");
   },
   peek(){
     this.hidden = false; this.showTarget();
@@ -125,6 +159,11 @@ const Send = {
       this.peek();
     }
     this.showMeters(); save();
+    if(this.roundOn){
+      this.done++;
+      document.getElementById("s-rt").textContent = this.done + " of " + ROUND_SEND;
+      if(this.done >= ROUND_SEND){ setTimeout(() => this.finishRound(), 1200); return; }
+    }
     setTimeout(() => this.newTarget(), got === want ? 1100 : 2400);
   },
   showMeters(){
@@ -186,7 +225,8 @@ document.getElementById("s-keymode").addEventListener("click", e => {
   Send.mode = b.dataset.km; P.keyMode = b.dataset.km; save();
   renderSend(); Send.clear();
 });
-document.getElementById("s-next").addEventListener("click", () => Send.newTarget());
+document.getElementById("s-play").addEventListener("click", () => { Sig.resume(); Send.startRound(); });
+document.getElementById("s-skip").addEventListener("click", () => Send.newTarget());
 document.getElementById("s-peek").addEventListener("click", () => Send.peek());
 document.getElementById("s-clear").addEventListener("click", () => Send.clear());
 document.getElementById("s-hear").addEventListener("click", () => play(Send.target, {ewpm:S.ewpm}));

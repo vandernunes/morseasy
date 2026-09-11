@@ -232,7 +232,7 @@
     <div class="verdict neutral" id="w-verdict">Pick a set, then press Start.</div>
     <div class="keypad wide" id="w-keypad"></div>
     <div class="row">
-      <button class="btn primary" id="w-start">Start</button>
+      <button class="btn primary" id="w-start">Play &middot; 10 words</button>
       <button class="btn" id="w-replay" disabled>Replay <kbd>Space</kbd></button>
       <button class="btn ghost" id="w-reveal" disabled>Show it</button>
       <button class="btn ghost" id="w-stop" disabled>Stop</button>
@@ -264,7 +264,7 @@
     <div class="verdict neutral" id="c-verdict">Sent twice, the way a real station calls.</div>
     <div class="keypad wide" id="c-keypad"></div>
     <div class="row">
-      <button class="btn primary" id="c-start">Start</button>
+      <button class="btn primary" id="c-start">Play &middot; 10 calls</button>
       <button class="btn" id="c-replay" disabled>Replay <kbd>Space</kbd></button>
       <button class="btn ghost" id="c-reveal" disabled>Show it</button>
       <button class="btn ghost" id="c-stop" disabled>Stop</button>
@@ -355,7 +355,8 @@
 
     <div class="verdict neutral" id="s-verdict">Press and hold the key below.</div>
     <div class="row">
-      <button class="btn primary" id="s-next">New target</button>
+      <button class="btn primary" id="s-play">Play &middot; 10 sends</button>
+      <button class="btn" id="s-skip" hidden>Skip this one</button>
       <button class="btn" id="s-hear">Hear it</button>
       <button class="btn ghost" id="s-peek" hidden>Show it</button>
       <button class="btn ghost" id="s-clear">Clear</button>
@@ -545,6 +546,24 @@
       <input type="range" id="vol" min="0" max="100" step="1" value="30">
     </div>
     <div class="field">
+      <span class="k">Move to another device</span>
+      <span class="note-sm">There is no account, so nothing syncs by itself. Carry your progress across yourself &mdash; a link, or a file. The link keeps everything after the <code>#</code>, which browsers never send to a server, so your practice history still goes nowhere.</span>
+      <div class="row">
+        <button class="btn sm" id="xfer-link">Copy transfer link</button>
+        <button class="btn sm ghost" id="xfer-file">Save a backup file</button>
+      </div>
+      <input type="text" class="xfer-out" id="xfer-out" readonly hidden aria-label="Transfer link">
+      <span class="note-sm">Arriving from another device? Paste the link or code here.</span>
+      <input type="text" id="xfer-in" placeholder="paste link or code" autocomplete="off" spellcheck="false">
+      <div class="row">
+        <button class="btn sm" id="xfer-restore">Restore</button>
+        <label class="btn sm ghost xfer-filebtn" for="xfer-load">Restore from a file</label>
+        <input type="file" id="xfer-load" accept="application/json,.json,text/plain" class="xfer-hidden">
+      </div>
+      <span class="note-sm" id="xfer-msg"></span>
+    </div>
+
+    <div class="field">
       <span class="k">Groups per lesson</span>
       <div class="seg" id="f-len"></div>
     </div>
@@ -578,6 +597,7 @@
 <script src="js/send.js"></script>
 <script src="js/reference.js"></script>
 <script src="js/offline.js"></script>
+<script src="js/transfer.js"></script>
 <script src="js/home.js"></script>
 <script src="js/app.js"></script>
 
