@@ -15,6 +15,12 @@ function num(v,d){ const n = parseFloat(v); return isFinite(n) ? n : d; }
 function clamp(n,a,b){ return Math.min(b, Math.max(a, n)); }
 function loadLocal(){
   try{ const raw = localStorage.getItem(KEY); if(raw) Object.assign(P, JSON.parse(raw)); }catch(e){}
+  // Storage is not a trusted source: it survives across versions and will later
+  // be writable by progress import. Re-clean the free-text fields on every load.
+  P.call = cleanField(P.call || "", 12);
+  P.name = cleanField(P.name || "", 20);
+  P.qth  = cleanField(P.qth  || "", 20);
+  P.rig  = cleanField(P.rig  || "", 20);
   try{
     S.cwpm = clamp(num(localStorage.getItem(KEY+"-cwpm"), 20), 13, 35);
     S.ewpm = clamp(num(localStorage.getItem(KEY+"-ewpm"), 8), 4, 35);

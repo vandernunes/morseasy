@@ -95,7 +95,7 @@ const Koch = {
       .filter(x => x.e + x.o >= 4 && x.e > 0)
       .sort((a,b) => (b.e/(b.e+b.o)) - (a.e/(a.e+a.o))).slice(0,12);
     document.getElementById("k-weak").innerHTML = weak.length
-      ? weak.map(x => '<span class="chip weak">'+esc(x.c)+' <span style="color:var(--dimmer)">'+Math.round(100*x.e/(x.e+x.o))+'%</span></span>').join("")
+      ? weak.map(x => '<span class="chip weak">'+esc(x.c)+' <span class="chip-pct">'+Math.round(100*x.e/(x.e+x.o))+'%</span></span>').join("")
       : '<span class="hint">Nothing logged yet.</span>';
 
     buildKeypad(document.getElementById("k-keypad"), cs, {enter:false});

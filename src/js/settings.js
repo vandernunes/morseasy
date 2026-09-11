@@ -38,7 +38,7 @@ document.getElementById("brandbtn").addEventListener("click", openSettings);
 document.getElementById("helpbtn").addEventListener("click", () => dlgHelp.showModal());
 document.getElementById("set-close").addEventListener("click", () => dlgSet.close());
 document.getElementById("f-call2").addEventListener("input", e => {
-  P.call = e.target.value.toUpperCase().trim();
+  P.call = cleanField(e.target.value, 12).trim();
   save(); renderIdentity();
 });
 document.getElementById("help-close").addEventListener("click", () => { dlgHelp.close(); P.seenHelp = true; save(); });
@@ -87,7 +87,7 @@ bindRange("vol","vol",  v => v+"%");
 
 ["f-call","f-name","f-qth","f-rig"].forEach(id => {
   document.getElementById(id).addEventListener("input", e => {
-    const v = e.target.value.toUpperCase().trim();
+    const v = cleanField(e.target.value, id === "f-call" ? 12 : 20).trim();
     if(id === "f-call") P.call = v;
     if(id === "f-name") P.name = v;
     if(id === "f-qth")  P.qth = v;

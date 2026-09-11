@@ -14,7 +14,8 @@ Vander Nunes - N5EDB
 """
 from __future__ import annotations
 
-import html
+import base64
+import hashlib
 import pathlib
 import re
 import shutil
@@ -24,6 +25,31 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
 PUBLIC = ROOT / "public"
 DIST = ROOT / "dist"
+
+# Everything the page is allowed to reach. The app makes no network calls of its
+# own, so connect-src is locked shut; the only third party is the Google Fonts
+# stylesheet and the font files it pulls.
+CSP_TEMPLATE = (
+    "default-src 'none'; "
+    "script-src {script_hashes}; "
+    "style-src {style_hashes} https://fonts.googleapis.com; "
+    "font-src https://fonts.gstatic.com; "
+    "img-src 'self' data:; "
+    "connect-src 'none'; "
+    "form-action 'none'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'none'; "
+    "object-src 'none'; "
+    "manifest-src 'none'; "
+    "upgrade-insecure-requests"
+)
+
+
+def csp_hash(body: str) -> str:
+    """CSP hashes cover the exact bytes between the tags, so hash what we write."""
+    digest = hashlib.sha256(body.encode("utf-8")).digest()
+    return "'sha256-" + base64.b64encode(digest).decode("ascii") + "'"
+
 
 LOCAL_CSS = re.compile(r'[ \t]*<link rel="stylesheet" href="(?!https?:)([^"]+)"[^>]*>\n?')
 LOCAL_JS = re.compile(r'[ \t]*<script src="(?!https?:)([^"]+)"></script>\n?')
@@ -48,18 +74,24 @@ def build() -> int:
 
     css_files: list[str] = []
     js_files: list[str] = []
+    script_hashes: list[str] = []
+    style_hashes: list[str] = []
 
     def inline_css(match: re.Match) -> str:
         rel = match.group(1)
         css_files.append(rel)
         body = guard(read(SRC / rel), "css", rel)
-        return f"<style>\n/* {rel} */\n{body.strip()}\n</style>\n"
+        inner = f"\n/* {rel} */\n{body.strip()}\n"
+        style_hashes.append(csp_hash(inner))
+        return f"<style>{inner}</style>\n"
 
     def inline_js(match: re.Match) -> str:
         rel = match.group(1)
         js_files.append(rel)
         body = guard(read(SRC / rel), "js", rel)
-        return f"<script>\n{body.strip()}\n</script>\n"
+        inner = f"\n{body.strip()}\n"
+        script_hashes.append(csp_hash(inner))
+        return f"<script>{inner}</script>\n"
 
     page = LOCAL_CSS.sub(inline_css, page)
     page = LOCAL_JS.sub(inline_js, page)
@@ -82,6 +114,18 @@ def build() -> int:
         else:
             shutil.copy2(item, DIST / item.name)
 
+    # The Content-Security-Policy carries a hash per inlined block, so it has to
+    # be generated from the same strings that were just written into the page.
+    csp = CSP_TEMPLATE.format(
+        script_hashes=" ".join(script_hashes),
+        style_hashes=" ".join(style_hashes),
+    )
+    headers = DIST / "_headers"
+    headers.write_text(
+        headers.read_text(encoding="utf-8").replace("#CSP_PLACEHOLDER", csp),
+        encoding="utf-8",
+    )
+
     size = (DIST / "index.html").stat().st_size
     print(f"morse easy - built dist/index.html  {size:,} bytes")
     print(f"  inlined {len(css_files)} stylesheet(s), {len(js_files)} script(s)")
@@ -89,6 +133,8 @@ def build() -> int:
         print(f"    {name}")
     copied = sorted(p.name for p in DIST.iterdir() if p.name != "index.html")
     print(f"  copied from public/: {', '.join(copied) or '(nothing)'}")
+    print(f"  CSP: {len(script_hashes)} script hash(es), {len(style_hashes)} style hash(es), "
+          f"no 'unsafe-inline'")
     return 0
 
 
