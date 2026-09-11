@@ -10,6 +10,8 @@ Vander Nunes - N5EDB
 """
 from __future__ import annotations
 
+import base64
+import hashlib
 import pathlib
 import re
 import shutil
@@ -117,6 +119,51 @@ def main() -> int:
     ok("three-step lesson flow present", "PICK_TARGET" in built and "STEPS" in built)
     ok("no hard-coded personal callsign default", 'call:"N5EDB"' not in built,
        "the default state must stay blank so the page works for any operator")
+
+    print("\ncontent security policy")
+    headers = (DIST / "_headers").read_text(encoding="utf-8")
+    csp_lines = [l for l in headers.splitlines() if "Content-Security-Policy" in l]
+    ok("a CSP header is emitted", bool(csp_lines), "build.py should fill #CSP_PLACEHOLDER")
+    csp = csp_lines[0] if csp_lines else ""
+    ok("placeholder was substituted", "#CSP_PLACEHOLDER" not in headers)
+
+    def sha(body: str) -> str:
+        d = hashlib.sha256(body.encode("utf-8")).digest()
+        return "'sha256-" + base64.b64encode(d).decode("ascii") + "'"
+
+    # Reparse the built page the way a browser does, rather than trusting the
+    # strings build.py hashed. A mismatch here means a blank site in production.
+    blocks = re.findall(r"<script>(.*?)</script>", built, re.S)
+    blocks += re.findall(r"<style>(.*?)</style>", built, re.S)
+    computed = {sha(b) for b in blocks}
+    declared = set(re.findall(r"'sha256-[A-Za-z0-9+/=]+'", csp))
+    ok(
+        "every inline block is hashed in the CSP",
+        computed <= declared,
+        f"not covered: {sorted(computed - declared)} - the browser would refuse to run them",
+    )
+    ok(
+        "no stale hashes left in the CSP",
+        declared <= computed,
+        f"stale: {sorted(declared - computed)}",
+    )
+    ok("CSP has no 'unsafe-inline'", "unsafe-inline" not in csp)
+    ok("CSP has no 'unsafe-eval'", "unsafe-eval" not in csp)
+    ok("CSP default-src is 'none'", "default-src 'none'" in csp)
+    ok("CSP forbids framing", "frame-ancestors 'none'" in csp)
+
+    print("\nescaping")
+    ui = (SRC / "js" / "ui.js").read_text(encoding="utf-8")
+    ok("esc() escapes quotes as well as angle brackets",
+       '&quot;' in ui and '&#39;' in ui,
+       "templates interpolate into data-* attributes; unescaped quotes break out")
+    ok("station fields are sanitised at the input boundary",
+       "cleanField" in (SRC / "js" / "settings.js").read_text(encoding="utf-8"))
+    ok("no inline style attributes",
+       'style="' not in page and not any(
+           'style="' in (SRC / "js" / f.name).read_text(encoding="utf-8")
+           for f in (SRC / "js").glob("*.js")),
+       "an inline style attribute would need style-src 'unsafe-inline'")
 
     print()
     if failures:

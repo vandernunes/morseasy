@@ -2,7 +2,22 @@
    Part of Morse Easy. Loaded as a classic script; see js/README for load order. */
 "use strict";
 
-function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+/* Escapes for BOTH text and attribute position. Quotes matter: several
+   templates interpolate into data-* attributes, and without escaping them a
+   value containing a quote could close the attribute and inject markup. */
+function esc(s){
+  return String(s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+/* Station details are typed by the operator and end up rendered back into the
+   page, sent as Morse, and written to storage. Nothing outside this set is
+   sendable as CW anyway, so reject the rest at the door rather than relying on
+   escaping alone. */
+function cleanField(v, max){
+  return String(v).toUpperCase().replace(/[^A-Z0-9 /?.,\-]/g, "").slice(0, max || 20);
+}
 function patSpaced(p){ return p.split("").join(" "); }
 function sayPattern(p){ return p.split("").map((c,i,a) => c === "." ? (i===a.length-1?"dit":"di") : "dah").join("-"); }
 function sub(s){

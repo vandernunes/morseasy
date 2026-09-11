@@ -208,6 +208,8 @@ kbd{font-family:var(--f-mono);font-size:12px;background:var(--panel-2);border:1p
 
 /* ---------------- chips ---------------- */
 .chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip-pct{color:var(--dimmer)}
+.gap-12{gap:12px}
 .chip{font-family:var(--f-mono);font-size:14px;font-weight:600;background:var(--panel-2);border:1px solid var(--panel-3);border-radius:var(--r);padding:4px 9px;color:var(--ink-2);letter-spacing:.06em}
 .chip.new{background:var(--amber-soft);border-color:var(--amber);color:#FFE3B0}
 .chip.weak{border-color:var(--miss);color:#FFB3BF}
