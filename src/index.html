@@ -110,7 +110,7 @@
       <div class="readout" id="echo-readout"><span class="pend">press start</span></div>
       <div class="stream" id="echo-stream"></div>
       <div class="verdict neutral" id="echo-v">You hear a character, then key it back. Your ears and your hand on the same character.</div>
-      <div class="keywrap" id="echo-pads"></div>
+      <div class="keywrap sticky" id="echo-pads"></div>
       <div class="hint" id="echo-keys"></div>
       <div class="row">
         <button class="btn" id="echo-hear" disabled>Hear it again <kbd>Space</kbd></button>
@@ -300,26 +300,36 @@
     <p>Sending is easier than copying, and sending badly is the fastest way to be asked for repeats. Watch the decoded line: if this cannot read you, neither can the operator on the other end.</p>
   </div>
   <div class="row picker" id="s-keymode"></div>
+  <div class="row picker" id="s-sets"></div>
+
   <div class="scope">
-    <div class="scope-label"><span>Send this</span><span class="rt">Timing follows character speed</span></div>
+    <div class="scope-label"><span>Send this</span><span class="rt" id="s-rt"></span></div>
     <div class="readout" id="s-target">CQ CQ DE N5EDB</div>
-    <div class="scope-label"><span>Decoded from your fist</span></div>
-    <div class="readout" id="s-decoded"><span class="pend">nothing yet</span></div>
-    <div class="stream" id="s-stream"></div>
-    <div class="verdict neutral" id="s-verdict">Hold a pad below, or hold the keyboard key.</div>
+
+    <div class="scope-label"><span>Your fist</span></div>
+    <div class="fist">
+      <span class="fist-sent" id="s-decoded"><span class="pend">nothing yet</span></span>
+      <span class="fist-elems" id="s-stream"></span>
+    </div>
+
+    <div class="verdict neutral" id="s-verdict">Press and hold the key below.</div>
     <div class="row">
       <button class="btn primary" id="s-next">New target</button>
-      <button class="btn" id="s-hear">Hear it correct</button>
+      <button class="btn" id="s-hear">Hear it</button>
+      <button class="btn ghost" id="s-peek" hidden>Show it</button>
       <button class="btn ghost" id="s-clear">Clear</button>
     </div>
   </div>
-  <div class="pads" id="s-pads"></div>
+
+  <div class="keywrap sticky" id="s-pads"></div>
   <div class="hint" id="s-keys"></div>
   <div class="meters">
     <div class="meter"><span class="m-k">Your speed</span><span class="m-v amber" id="s-wpm">&mdash;</span></div>
     <div class="meter"><span class="m-k">Dit avg</span><span class="m-v" id="s-dit">&mdash;</span></div>
     <div class="meter"><span class="m-k">Dah ratio</span><span class="m-v" id="s-ratio">&mdash;</span></div>
     <div class="meter"><span class="m-k">Sent clean</span><span class="m-v good" id="s-ok">0</span></div>
+    <div class="meter"><span class="m-k">Missed</span><span class="m-v miss" id="s-no">0</span></div>
+    <div class="meter"><span class="m-k">Streak</span><span class="m-v amber" id="s-streak">0</span></div>
   </div>
   <details class="more"><summary>Using a real key or paddle instead</summary><div class="body">
     <div class="cols">
