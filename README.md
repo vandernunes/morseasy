@@ -90,11 +90,27 @@ the callsign drill and the reference sheet.
 
 ## Use it
 
-Just open **[morseasy.com](https://morseasy.com)**. It works on a phone, a
-tablet, or a desktop, and once loaded it works with no connection at all.
+Just open **[morseasy.com](https://morseasy.com)**.
 
-Your progress is saved in your browser. Nothing is sent anywhere — there is no
-server to send it to.
+### Install it, and it works with no signal
+
+Open **Settings (the gear) → Use it offline**, or use your browser's install
+button. On an iPhone: **Share → Add to Home Screen**.
+
+Once installed there is nothing left to fetch. The page, the fonts and the
+icons are the whole app, and there is no API, no analytics and no backend —
+so it runs identically on a plane, in a basement, or in a field with no bars.
+
+**Installing also stops iOS deleting your progress.** Safari clears
+script-writable storage after seven days without a visit, so a fortnight away
+costs you every lesson and your streak. Installed apps are exempt.
+
+### Your data
+
+Progress is saved in your browser and never leaves the device. There is no
+server to send it to, no account, and no tracking. The page makes **zero**
+third-party requests — the fonts are served from this origin, which is why the
+Content-Security-Policy names no external host at all.
 
 ### Run it locally
 

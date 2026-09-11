@@ -150,6 +150,26 @@ gets operated at night. Everything derives from custom properties on `:root`:
 grounds, rules, ink, the amber accent, and the semantic good/miss pair. Use the
 tokens; do not hard-code a colour that already has one.
 
+## Offline
+
+`public/sw.js` precaches the page, the eight font files and the icons, then
+serves cache-first. A navigation always resolves to the cached shell, which is
+what lets someone open the installed app with no connection.
+
+The cache name carries a build id that `build.py` derives from a hash of the
+built page plus every precached file. Any change produces a new cache; the old
+one is deleted on activate. A waiting worker is **not** activated automatically
+— the page offers a reload instead, because swapping the app out from under
+someone mid-lesson loses their group.
+
+`check.py` verifies that every path in the worker's `SHELL` array actually
+exists in `dist/`. If one does not, `addAll()` rejects, the install fails, and
+every returning visitor silently stays on the previous build.
+
+Fonts are self-hosted for three reasons: the page then makes no third-party
+requests at all, the installed app renders correctly offline on first launch,
+and the CSP can name no external origin.
+
 ## Deploy
 
 `main` → GitHub Actions → `build.py` → `check.py` → `wrangler pages deploy` →

@@ -29,18 +29,22 @@ DIST = ROOT / "dist"
 # Everything the page is allowed to reach. The app makes no network calls of its
 # own, so connect-src is locked shut; the only third party is the Google Fonts
 # stylesheet and the font files it pulls.
+# Fonts are served from this origin now, so the policy names no external host
+# at all. connect-src and worker-src open to 'self' only because the service
+# worker has to fetch and cache this origin's own files.
 CSP_TEMPLATE = (
     "default-src 'none'; "
     "script-src {script_hashes}; "
-    "style-src {style_hashes} https://fonts.googleapis.com; "
-    "font-src https://fonts.gstatic.com; "
+    "style-src {style_hashes}; "
+    "font-src 'self'; "
     "img-src 'self' data:; "
-    "connect-src 'none'; "
+    "connect-src 'self'; "
+    "worker-src 'self'; "
+    "manifest-src 'self'; "
     "form-action 'none'; "
     "frame-ancestors 'none'; "
     "base-uri 'none'; "
     "object-src 'none'; "
-    "manifest-src 'none'; "
     "upgrade-insecure-requests"
 )
 
@@ -113,6 +117,20 @@ def build() -> int:
             shutil.copytree(item, DIST / item.name)
         else:
             shutil.copy2(item, DIST / item.name)
+
+    # The service worker's cache name has to change whenever anything it caches
+    # changes, or a returning visitor keeps the old app forever. Hash the built
+    # page plus every file the worker precaches.
+    sw = DIST / "sw.js"
+    if sw.is_file():
+        digest = hashlib.sha256(page.encode("utf-8"))
+        for asset in sorted(DIST.rglob("*")):
+            if asset.is_file() and asset.name not in ("sw.js", "_headers"):
+                digest.update(asset.read_bytes())
+        build_id = digest.hexdigest()[:12]
+        sw.write_text(sw.read_text(encoding="utf-8").replace("#BUILD_ID", build_id),
+                      encoding="utf-8")
+        print(f"  service worker build id: {build_id}")
 
     # The Content-Security-Policy carries a hash per inlined block, so it has to
     # be generated from the same strings that were just written into the page.
