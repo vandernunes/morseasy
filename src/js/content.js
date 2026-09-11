@@ -107,28 +107,28 @@ const QSOS = [
     blurb:"The contact you will make first. Someone calls CQ, you come back, you exchange the basics, you say 73.",
     lines:[
       {who:"W4JQP", t:"CQ CQ CQ DE W4JQP W4JQP W4JQP K", en:"Calling anyone. This is W4JQP. Over to anyone."},
-      {who:"{ME}", t:"W4JQP DE {ME} {ME} K", en:"Answer with his call once, yours twice. No more than that."},
+      {who:"{ME}", send:"W4JQP DE {ME} K", t:"W4JQP DE {ME} {ME} K", en:"Answer with his call once, yours twice. No more than that."},
       {who:"W4JQP", t:"{ME} DE W4JQP = GE OM ES TNX FER CALL = UR RST 579 579 = NAME IS JIM JIM = QTH IS ATLANTA GA ATLANTA GA = HW CPY? = {ME} DE W4JQP KN", en:"Good evening old man and thanks for the call. Your report is 579. My name is Jim. I am in Atlanta, Georgia. How do you copy? Back to you only."},
-      {who:"{ME}", t:"W4JQP DE {ME} = GE JIM ES TNX FER RPRT = UR RST 599 599 = NAME HR IS {NAME} {NAME} = QTH IS {QTH} {QTH} = RIG IS {RIG} RUNNING 50 W ES ANT IS A DIPOLE = HW? = W4JQP DE {ME} KN", en:"Your turn, same shape and same order: greeting, report, name, location, rig, over."},
+      {who:"{ME}", send:"UR RST 599 = NAME {NAME} = QTH {QTH} = HW? K", t:"W4JQP DE {ME} = GE JIM ES TNX FER RPRT = UR RST 599 599 = NAME HR IS {NAME} {NAME} = QTH IS {QTH} {QTH} = RIG IS {RIG} RUNNING 50 W ES ANT IS A DIPOLE = HW? = W4JQP DE {ME} KN", en:"Your turn, same shape and same order: greeting, report, name, location, rig, over."},
       {who:"W4JQP", t:"{ME} DE W4JQP = FB {NAME} ES SOLID CPY = RIG HR IS K3 ES 100 W TO A VERTICAL = WX IS RAIN ES 68 F = MUST QRT NW = TNX FER FB QSO ES HPE CUAGN = 73 ES GL = {ME} DE W4JQP SK", en:"Fine business, solid copy. K3 at 100 watts to a vertical. Weather rain, 68 F. He has to stop. Thanks, hope to see you again, 73 and good luck. End of contact."},
-      {who:"{ME}", t:"W4JQP DE {ME} = TNX JIM FER NICE QSO = 73 ES CUAGN = W4JQP DE {ME} SK", en:"Thanks Jim for the nice contact, 73 and see you again. End of contact."}
+      {who:"{ME}", send:"73 ES TNX SK", t:"W4JQP DE {ME} = TNX JIM FER NICE QSO = 73 ES CUAGN = W4JQP DE {ME} SK", en:"Thanks Jim for the nice contact, 73 and see you again. End of contact."}
     ]},
   { id:"cq", label:"Call CQ yourself",
     blurb:"You call, a station answers, you run the contact. Do this after ten answered CQs.",
     lines:[
-      {who:"{ME}", t:"CQ CQ CQ DE {ME} {ME} {ME} K", en:"3x3 is the standard call. Then listen for at least ten seconds."},
+      {who:"{ME}", send:"CQ CQ DE {ME} K", t:"CQ CQ CQ DE {ME} {ME} {ME} K", en:"3x3 is the standard call. Then listen for at least ten seconds."},
       {who:"KD8RTQ", t:"{ME} DE KD8RTQ KD8RTQ K", en:"KD8RTQ is answering you."},
-      {who:"{ME}", t:"KD8RTQ DE {ME} = GM ES TNX FER CALL = UR RST 559 559 = NAME IS {NAME} {NAME} = QTH {QTH} = HW? = KD8RTQ DE {ME} KN", en:"Report first, then name, then location. Send the important things twice."},
+      {who:"{ME}", send:"KD8RTQ DE {ME} = UR RST 559 = NAME {NAME} K", t:"KD8RTQ DE {ME} = GM ES TNX FER CALL = UR RST 559 559 = NAME IS {NAME} {NAME} = QTH {QTH} = HW? = KD8RTQ DE {ME} KN", en:"Report first, then name, then location. Send the important things twice."},
       {who:"KD8RTQ", t:"{ME} DE KD8RTQ = TNX {NAME} = UR RST 579 = OP IS MIKE = QTH DETROIT MI = RIG FT-991A 80 W ES DIPOLE UP 30 FT = WX SNOW HR HI = BTU = {ME} DE KD8RTQ KN", en:"Thanks. Your report 579, operator Mike, Detroit Michigan, FT-991A at 80 watts into a dipole 30 feet up, weather is snow (laughing). Back to you."},
-      {who:"{ME}", t:"KD8RTQ DE {ME} = FB MIKE ES TNX FER INFO = SRI ABT SNOW HI = QSL VIA LOTW = TNX FER QSO = 73 ES CUL = KD8RTQ DE {ME} SK", en:"Fine business Mike. Confirming via Logbook of the World. Thanks, 73, see you later."}
+      {who:"{ME}", send:"FB TNX = 73 ES CUL SK", t:"KD8RTQ DE {ME} = FB MIKE ES TNX FER INFO = SRI ABT SNOW HI = QSL VIA LOTW = TNX FER QSO = 73 ES CUL = KD8RTQ DE {ME} SK", en:"Fine business Mike. Confirming via Logbook of the World. Thanks, 73, see you later."}
     ]},
   { id:"pota", label:"POTA / short exchange",
     blurb:"Parks on the Air and contests. Five seconds a contact. This is where most CW happens now.",
     lines:[
       {who:"K4XYZ", t:"CQ POTA DE K4XYZ K4XYZ K", en:"K4XYZ is activating a park and wants callers."},
-      {who:"{ME}", t:"{ME}", en:"Send your call once. Nothing else. No DE, no K."},
+      {who:"{ME}", send:"{ME}", t:"{ME}", en:"Send your call once. Nothing else. No DE, no K."},
       {who:"K4XYZ", t:"{ME} 599 GA", en:"He copied you: report 599, he is in Georgia."},
-      {who:"{ME}", t:"RR 599 TX TU", en:"Roger roger, my report 599, my state, thank you. Change TX to your own state."},
+      {who:"{ME}", send:"RR 599 TU", t:"RR 599 TX TU", en:"Roger roger, my report 599, my state, thank you. Change TX to your own state."},
       {who:"K4XYZ", t:"TU QRZ DE K4XYZ", en:"Thanks, who is next? This is K4XYZ. The contact is done."},
       {who:"K4XYZ", t:"{ME} UR 5NN 5NN TX TX BK", en:"Contest style: 5NN is 599 in cut numbers. BK means quick turnaround."}
     ]},
@@ -136,11 +136,11 @@ const QSOS = [
     blurb:"Missed his call, fading, interference, somebody sending too fast. These six phrases save every contact.",
     lines:[
       {who:"?", t:"{ME} DE W?4B?T KN", en:"You only got part of it. That is completely normal."},
-      {who:"{ME}", t:"AGN? UR CALL AGN? KN", en:"Again? Your call again? Over."},
+      {who:"{ME}", send:"AGN? K", t:"AGN? UR CALL AGN? KN", en:"Again? Your call again? Over."},
       {who:"W4BQT", t:"W4BQT W4BQT W4BQT KN", en:"He repeats it three times, slowly."},
-      {who:"{ME}", t:"QRS PSE = UR QRQ FER ME = KN", en:"Please send more slowly, you are too fast for me. Never be embarrassed to send this."},
+      {who:"{ME}", send:"QRS PSE K", t:"QRS PSE = UR QRQ FER ME = KN", en:"Please send more slowly, you are too fast for me. Never be embarrassed to send this."},
       {who:"W4BQT", t:"QRS OK = NAME IS BOB BOB = QTH FL FL = KN", en:"He slows down. Good operators always will."},
-      {who:"{ME}", t:"QRM HR = PSE RPT QTH = KN", en:"There is interference here, please repeat your location."},
-      {who:"{ME}", t:"QSB ES CPI ABT 60 PCT = 73 ES TNX = SK", en:"Signal is fading and I am copying about 60 percent. Wrapping up honestly beats faking it."}
+      {who:"{ME}", send:"QRM HR K", t:"QRM HR = PSE RPT QTH = KN", en:"There is interference here, please repeat your location."},
+      {who:"{ME}", send:"73 ES TNX SK", t:"QSB ES CPI ABT 60 PCT = 73 ES TNX = SK", en:"Signal is fading and I am copying about 60 percent. Wrapping up honestly beats faking it."}
     ]}
 ];
