@@ -30,6 +30,41 @@ document.getElementById("speedbar").addEventListener("click", e => {
   syncSettingInputs(); saveSettings(); renderSpeeds();
 });
 
+/* Three states, matching what the viewer actually has: follow the device,
+   force light, force dark. "system" stamps nothing on <html> so the CSS
+   prefers-color-scheme query decides; the other two stamp data-theme and win
+   over it in both directions. */
+const THEMES = [
+  {id:"system", glyph:"\u25d0", label:"following your device"},
+  {id:"light",  glyph:"\u2600", label:"light"},
+  {id:"dark",   glyph:"\u263e", label:"dark"}
+];
+function applyTheme(){
+  const t = THEMES.find(x => x.id === P.theme) || THEMES[0];
+  if(t.id === "system") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = t.id;
+  const btn = document.getElementById("themebtn");
+  if(btn){
+    btn.textContent = t.glyph;
+    btn.title = "Theme: " + t.label + " — tap to change";
+  }
+  // keep the browser chrome (address bar, notch) in step with the page
+  const dark = t.id === "dark" ||
+    (t.id === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  let m = document.querySelector('meta[name="theme-color"]');
+  if(!m){ m = document.createElement("meta"); m.name = "theme-color"; document.head.appendChild(m); }
+  m.content = dark ? "#0A0D0F" : "#F7F5F2";
+}
+function cycleTheme(){
+  const i = THEMES.findIndex(x => x.id === P.theme);
+  P.theme = THEMES[(i + 1) % THEMES.length].id;
+  save(); applyTheme();
+}
+document.getElementById("themebtn").addEventListener("click", cycleTheme);
+// while on "system", follow the device if it flips mid-session
+window.matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", () => { if(P.theme === "system") applyTheme(); });
+
 const dlgSet = document.getElementById("dlg-set");
 const dlgHelp = document.getElementById("dlg-help");
 function openSettings(){ syncSettingInputs(); dlgSet.showModal(); }

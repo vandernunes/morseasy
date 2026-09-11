@@ -81,6 +81,7 @@ function renderIdentity(){
   document.getElementById("s-target").textContent = Send.target;
 }
 function renderAll(){
+  applyTheme();
   renderSpeeds(); renderIdentity();
   Koch.render(); renderWordSets(); renderCallSets();
   renderQsoPicker(); renderQso(); renderSend();

@@ -42,6 +42,21 @@ Then test it by hand in a browser, with the sound on. This is an audio app; a
 passing check script proves nothing about whether the code sounds right.
 At minimum walk one lesson through all three steps.
 
+**If you changed layout, check it at phone size.** Most people learn on a
+phone, and a desktop browser will not show you what is wrong. There is an
+optional tool for this:
+
+```bash
+npm i -D playwright && npx playwright install chromium
+python3 scripts/build.py
+python3 -m http.server 8899 --directory dist &
+node scripts/preview.js http://127.0.0.1:8899/ learn,words,calls,qso,send
+```
+
+It writes a screenshot per tab and prints horizontal overflow, header height,
+where content starts, and every tap target under 44px. It is not in CI because
+the app itself has no dependencies and we are keeping it that way.
+
 ## Who can change what
 
 Anyone can contribute. Nobody can merge but the maintainer.
