@@ -1,0 +1,39 @@
+name: Feature or content request
+description: A new drill, a correction to the on-air content, an improvement
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind
+      options:
+        - Correction to the on-air content (Q-code, abbreviation, QSO script)
+        - New drill or practice mode
+        - Usability improvement
+        - Accessibility
+        - Something else
+    validations: {required: true}
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What you would like
+    validations: {required: true}
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it would help someone learning CW
+      description: >
+        For content corrections, please say what you actually hear on the air
+        and roughly where - band, mode of operating, kind of contact.
+    validations: {required: true}
+
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: The two rules
+      description: See docs/LEARNING-PATH.md
+      options:
+        - label: This does not test a sound the app has not taught first
+        - label: This does not make guessing the fastest path forward

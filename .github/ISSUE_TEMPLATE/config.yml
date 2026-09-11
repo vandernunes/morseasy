@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question about learning CW
+    url: https://github.com/vandernunes/morseasy/discussions
+    about: Ask about the method, speeds, or getting on the air. Not a bug.
+  - name: Report a security vulnerability
+    url: https://github.com/vandernunes/morseasy/security/advisories/new
+    about: Please report privately, never as a public issue.

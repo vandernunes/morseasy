@@ -1,0 +1,43 @@
+name: Bug report
+description: Something is broken or behaves wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, and what the app did instead.
+    validations: {required: true}
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations: {required: true}
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where
+      options: [Learn, Letters, Words, Callsigns, QSO, Sending, Reference, Settings, Audio, Other]
+    validations: {required: true}
+
+  - type: input
+    id: env
+    attributes:
+      label: Browser and device
+      placeholder: Safari 18 on iPhone 15 / Chrome 131 on macOS
+    validations: {required: true}
+
+  - type: input
+    id: speed
+    attributes:
+      label: Speed settings when it happened
+      placeholder: Character 20 wpm, Overall 8 wpm
+
+  - type: checkboxes
+    id: sound
+    attributes:
+      label: Sound
+      options:
+        - label: The sound was on and audible
